@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="SecondaryTabs" parent="Widget.Design.TabLayout">
+        <item name="android:background">#fff</item>
+        <item name="tabSelectedTextColor">@color/primary</item>
+        <item name="tabIndicatorColor">@color/primary</item>
+    </style>
+
+    <style name="HorizontalLine">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">#1E000000</item>
+    </style>
+
+    <style name="FirstRunActivityTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <style name="SettingsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
+
+    <style name="ColorButtonTheme" parent="Base.Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/accent</item>
+        <item name="android:textColor">?android:textColorPrimaryInverse</item>
+    </style>
+
+    <style name="FullScreenErrorMsg">
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/timetable_loading_error</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/text_secondary_light</item>
+    </style>
+
+</resources>

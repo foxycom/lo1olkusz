@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <!--user data-->
+    <string name="user_number_key">user_number</string>
+    <string name="user_class_key">user_class</string>
+    <string name="user_groups_key">user_groups</string>
+
+    <!--lucky number-->
+    <string name="ln_notify_key">ln_notify</string>
+    <bool name="ln_notify_default">true</bool>
+
+    <string name="ln_sound_key">ln_sound</string>
+    <bool name="ln_sound_default">false</bool>
+
+    <string name="ln_vibration_key">ln_vibration</string>
+    <bool name="ln_vibration_default">true</bool>
+
+    <!--replacements-->
+    <string name="replacements_notify_key">replacements_notify</string>
+    <bool name="replacements_notify_default">true</bool>
+
+    <string name="replacements_sound_key">replacements_sound</string>
+    <bool name="replacements_sound_default">false</bool>
+
+    <string name="replacements_vibration_key">replacements_vibration</string>
+    <bool name="replacements_vibration_default">false</bool>
+
+</resources>

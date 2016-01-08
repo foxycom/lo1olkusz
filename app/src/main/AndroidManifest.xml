@@ -1,0 +1,79 @@
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<manifest package="com.pjanczyk.lo1olkusz"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <application
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@drawable/icon_48dp"
+        android:label="@string/app_name"
+        android:supportsRtl="false"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.firstrun.FirstRunActivity"
+            android:label="@string/app_name"
+            android:theme="@style/FirstRunActivityTheme"/>
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:label="@string/settings"
+            android:theme="@style/SettingsTheme"/>
+
+        <activity
+            android:name=".ui.settings.SettingsNotificationLNActivity"
+            android:label="@string/settings_notification_ln"
+            android:theme="@style/SettingsTheme"/>
+
+        <activity
+            android:name=".ui.settings.SettingsNotificationReplacementsActivity"
+            android:label="@string/settings_notification_replacements"
+            android:theme="@style/SettingsTheme"/>
+
+        <service android:name=".synchronization.SyncService"/>
+
+        <receiver android:name=".receivers.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.AlarmReceiver"/>
+
+    </application>
+
+</manifest>

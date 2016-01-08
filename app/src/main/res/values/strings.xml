@@ -1,0 +1,74 @@
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+    <string name="app_name">lo1olkusz</string>
+
+    <string name="greeting"><b>lo1olkusz</b>\n nieoficjalna aplikacja</string>
+    <string name="features">Plany lekcji, zastępstwa, szczęśliwe numerki i natychmiastowe powiadomienia.</string>
+    <string name="authors">© Piotr Janczyk</string>
+    <string name="next">DALEJ</string>
+    <string name="save">ZAPISZ</string>
+
+    <string name="close">Zamknij</string>
+
+    <string name="action_settings">Ustawienia</string>
+    <string name="action_refresh">Odśwież</string>
+    <string name="action_select_class">Wybierz klasę</string>
+
+    <string name="settings">Ustawienia</string>
+
+    <string name="your_details">Twoje dane</string>
+    <string name="no_internet_connection">Brak połączenia z internetem</string>
+
+    <string name="choose_class">Wybierz klasę…</string>
+    <string name="choose_number">Wybierz numer…</string>
+
+    <string name="sync_error">Błąd synchronizacji</string>
+    <string name="sync_error_bad_response">Błąd synchronizacji - błędna odpowiedź serwera</string>
+
+    <string name="new_app_version_available">Dostępna nowa wersja aplikacji</string>
+
+    <string name="settings_user_number">Numer w dzienniku</string>
+    <string name="settings_user_class">Klasa</string>
+    <string name="settings_user_groups">Grupy</string>
+    <string name="settings_cat_user_data">Twoje dane</string>
+    <string name="settings_notification_replacements">Zastępstwa dla twojej klasy</string>
+    <string name="settings_notification_ln">Twój szczęśliwy numerek</string>
+
+    <string name="do_not_notify">Nie powiadamiaj</string>
+    <string name="notify">Powiadamiaj</string>
+    <string name="notify_sound">Powiadamiaj — dźwięk</string>
+    <string name="notify_vibration">Powiadamiaj — wibracje</string>
+    <string name="notify_sound_vibration">Powiadamiaj — dźwięk i wibracje</string>
+
+    <string name="notification_ln_title">Twój szczęśliwy numerek</string>
+    <string name="notification_ln_text">nr %1$d - %2$s</string>
+    <string name="notification_replacements_title">Nowe zastępstwa</string>
+    <string name="notification_replacements_text">klasa %1$s - %2$s</string>
+
+    <string name="timetable_loading_error">Błąd wczytywania planu lekcji</string>
+
+    <string name="version_up_to_date">%s (aktualna)</string>
+    <string name="version_out_of_date">%s (dostępna aktualizacja)</string>
+
+    <string name="notification_list_replacements">Zastęstwa (%d)</string>
+    <string name="notification_list_lucky_number">Szczęśliwy numerek</string>
+
+</resources>

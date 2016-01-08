@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="@string/settings_cat_user_data">
+
+        <com.pjanczyk.lo1olkusz.utils.settings.ListPreference
+            android:key="@string/user_class_key"
+            android:summary="Wybierz klasę..."
+            android:title="@string/settings_user_class"
+            app:autoSummary="true"/>
+
+        <com.pjanczyk.lo1olkusz.utils.settings.MultiSelectListPreference
+            android:key="@string/user_groups_key"
+            android:summary="-"
+            android:title="@string/settings_user_groups"
+            app:autoSummary="true"/>
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="@string/user_number_key"
+            android:summary="%s"
+            android:title="@string/settings_user_number"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Powiadomienia">
+
+        <Preference
+            android:key="notification_ln"
+            android:title="Twój szczęśliwy numerek"/>
+
+        <Preference
+            android:key="notification_replacements"
+            android:title="Zastępstwa dla twojej klasy"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Informacje">
+
+        <Preference
+            android:summary="Piotr Janczyk"
+            android:title="Autor"/>
+
+        <Preference
+            android:summary="Michał Kiełtyka"
+            android:title="Pomysłodawca projektu"/>
+
+        <com.pjanczyk.lo1olkusz.ui.settings.DialogLicenses
+            android:summary="Szczegóły licencji na oprogramowanie typu open source"
+            android:title="Licencje typu open source"/>
+
+        <Preference
+            android:key="version"
+            android:summary=""
+            android:title="Wersja aplikacji"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -1,0 +1,13 @@
+Google Material Icons (https://design.google.com/icons)
+under CC-BY license (https://creativecommons.org/licenses/by/4.0)
+
+app\src\main\res\drawable-X:
+
+ic_replacements.png
+ic_daily_selected.png
+ic_notifications_selected.png
+ic_timetable_selected.png
+ic_lucky_number.png (modified)
+ic_daily_normal.png (modified)
+ic_notifications_normal.png (modified)
+ic_timetable_normal.png (modified)

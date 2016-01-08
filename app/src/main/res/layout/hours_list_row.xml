@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2016 Piotr Janczyk
+  ~
+  ~ This file is part of lo1olkusz unofficial app.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/text_begin"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="right"
+        android:paddingTop="3dp"
+        android:textColor="@color/text_secondary_light"
+        android:textSize="12sp"
+        tools:text="8:10"/>
+
+    <TextView
+        android:id="@+id/text_end"
+        android:layout_width="36dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:gravity="right"
+        android:paddingBottom="3dp"
+        android:textColor="@color/text_secondary_light"
+        android:textSize="12sp"
+        tools:text="8:55"/>
+
+    <TextView
+        android:id="@+id/text_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginLeft="62dp"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp"
+        android:paddingTop="10dp"
+        android:textColor="@color/teal_500"
+        android:textSize="16sp"
+        tools:text="1"/>
+
+    <LinearLayout
+        android:id="@+id/container_cells"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@id/text_hour"
+        android:orientation="horizontal">
+
+        <!-- dynamically added cells
+         @layout/hours_list_cell -->
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_replacement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/container_cells"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_toRightOf="@id/text_hour"
+        android:textColor="?attr/colorAccent"
+        android:textSize="16sp"
+        android:visibility="gone"
+        tools:text="Zastępstwo"/>
+
+</RelativeLayout>
