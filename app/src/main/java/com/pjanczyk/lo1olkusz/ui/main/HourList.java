@@ -19,8 +19,8 @@
 
 package com.pjanczyk.lo1olkusz.ui.main;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,60 +42,56 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 //TODO: add a progress bar that shows elapsed time
-public class HoursListFragment extends Fragment {
-
-    private final static String ARG_TIMETABLE_DAY = "timetableDay";
-    private final static String ARG_BELLS = "bells";
-    private final static String ARG_GROUPS = "groups";
-    private final static String ARG_REPLACEMENTS = "replacements";
+public class HourList extends LinearLayout {
 
     private TimetableDay timetableDay;
     private Bells bells;
     private Set<String> groups;
     private Replacements replacements;
 
-    public static HoursListFragment newInstance(Bells bells,
-                                                TimetableDay timetableDay,
-                                                Set<String> groups,
-                                                Replacements replacements) {
-        HoursListFragment fragment = new HoursListFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_BELLS, bells);
-        args.putParcelable(ARG_TIMETABLE_DAY, timetableDay);
-        if (groups == null) {
-            args.putStringArray(ARG_GROUPS, null);
-        } else {
-            args.putStringArray(ARG_GROUPS, groups.toArray(groups.toArray(new String[groups.size()])));
-        }
-        args.putParcelable(ARG_REPLACEMENTS, replacements);
-
-        fragment.setArguments(args);
-        return fragment;
+    public HourList(Context context) {
+        super(context);
+        init();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            bells = getArguments().getParcelable(ARG_BELLS);
-            timetableDay = getArguments().getParcelable(ARG_TIMETABLE_DAY);
-            replacements = getArguments().getParcelable(ARG_REPLACEMENTS);
-
-            String[] groupsArray = getArguments().getStringArray(ARG_GROUPS);
-            if (groupsArray != null) {
-                groups = new TreeSet<>(Arrays.asList(groupsArray));
-            }
-        }
+    public HourList(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public HourList(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init();
+    }
 
-        LinearLayout view = (LinearLayout) inflater.inflate(R.layout.hours_list, container, false);
+    private void init() {
+        final int sizeInDp = 5;
+        float scale = getResources().getDisplayMetrics().density;
+        int dpAsPixels = (int) (sizeInDp * scale + 0.5f);
+
+        setPadding(0, dpAsPixels, 0, dpAsPixels);
+        setOrientation(VERTICAL);
+    }
+
+    public void setContent(TimetableDay timetableDay,
+                         Bells bells,
+                         Set<String> groups,
+                         Replacements replacements) {
+        this.timetableDay = timetableDay;
+        this.bells = bells;
+        this.groups = groups;
+        this.replacements = replacements;
+
+        initializeViews();
+    }
+
+    public void initializeViews() {
+
+        removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
 
         if (timetableDay != null) {
 
@@ -115,7 +111,7 @@ public class HoursListFragment extends Fragment {
                         //add empty rows
                         while (hour - lastHour > 1) {
                             lastHour++;
-                            addRow(inflater, view, lastHour,
+                            addRow(inflater, lastHour,
                                     Collections.<TimetableSubject>emptyList(),
                                     Collections.<TimetableSubject>emptyList(),
                                     null);
@@ -127,14 +123,12 @@ public class HoursListFragment extends Fragment {
                         replacement = replacements.atHour(hour);
                     }
 
-                    addRow(inflater, view, hour, primary, secondary, replacement);
+                    addRow(inflater, hour, primary, secondary, replacement);
 
                     lastHour = hour;
                 }
             }
         }
-
-        return view;
     }
 
     private void separateSubjects(List<TimetableSubject> subjects,
@@ -165,15 +159,14 @@ public class HoursListFragment extends Fragment {
             }
         }
     }
-
-    private void addRow(LayoutInflater inflater, ViewGroup containerRows,
+    private void addRow(LayoutInflater inflater,
                         int hour,
                         Collection<TimetableSubject> primary,
                         Collection<TimetableSubject> secondary,
                         String replacement) {
 
-        if (containerRows.getChildCount() > 0) {
-            View separator = inflater.inflate(R.layout.hours_list_row_separator, containerRows, false);
+        if (this.getChildCount() > 0) {
+            View separator = inflater.inflate(R.layout.hours_list_row_separator, this, false);
 
             LocalTime breakBegin = null;
             LocalTime breakEnd = null;
@@ -190,11 +183,11 @@ public class HoursListFragment extends Fragment {
                 minutesText.setText(Integer.toString(minutes));
             }
 
-            containerRows.addView(separator);
+            this.addView(separator);
         }
 
         int resId = primary.size() == 0 ? R.layout.hours_list_row_secondary : R.layout.hours_list_row;
-        View row = inflater.inflate(resId, containerRows, false);
+        View row = inflater.inflate(resId, this, false);
 
         ViewGroup containerCells = (ViewGroup) row.findViewById(R.id.container_cells);
         TextView textHour = (TextView) row.findViewById(R.id.text_hour);
@@ -234,7 +227,7 @@ public class HoursListFragment extends Fragment {
             textReplacement.setText(replacement);
         }
 
-        containerRows.addView(row);
+        this.addView(row);
     }
 
     private void addCell(LayoutInflater inflater,

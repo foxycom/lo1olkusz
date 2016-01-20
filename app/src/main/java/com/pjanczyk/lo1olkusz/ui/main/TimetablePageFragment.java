@@ -82,16 +82,10 @@ public class TimetablePageFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.timetable_page, container, false);
 
-        Fragment fragment;
+        HourList hourList = (HourList) view.findViewById(R.id.hour_list);
         if (timetableDay != null) {
-            fragment = HoursListFragment.newInstance(bells, timetableDay, groups, null);
-        } else {
-            fragment = new Fragment();
+            hourList.setContent(timetableDay, bells, groups, null);
         }
-
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.hours_list_container, fragment)
-                .commit();
 
         return view;
     }

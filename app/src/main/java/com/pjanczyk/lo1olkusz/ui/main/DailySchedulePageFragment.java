@@ -124,16 +124,11 @@ public class DailySchedulePageFragment extends Fragment {
             textLuckyNumber.setText(Integer.toString(luckyNumber));
         }
 
-        Fragment fragment;
-        if (timetableDay != null) {
-            fragment = HoursListFragment.newInstance(bells, timetableDay, groups, replacements);
-        } else {
-            fragment = new Fragment();
-        }
+        HourList hourList = (HourList) view.findViewById(R.id.hour_list);
 
-        getChildFragmentManager().beginTransaction()
-                .replace(R.id.hours_list_container, fragment)
-                .commit();
+        if (timetableDay != null) {
+            hourList.setContent(timetableDay, bells, groups, replacements);
+        }
 
         return view;
     }

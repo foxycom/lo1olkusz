@@ -73,15 +73,11 @@
         android:layout_height="1dp"
         android:background="#2E000000"/>
 
-    <FrameLayout
-        android:id="@+id/hours_list_container"
+    <com.pjanczyk.lo1olkusz.ui.main.HourList
+        android:id="@+id/hour_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff">
-
-        <!-- @layout/hours_list -->
-
-    </FrameLayout>
+        android:background="#fff"/>
 
 </LinearLayout>
 
