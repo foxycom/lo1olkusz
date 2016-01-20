@@ -47,8 +47,9 @@ public class Bells implements Parcelable, Emptyable {
 
     @Nullable
     public LocalTime getHourBegin(int hour) {
-        if (hour - 1 < value.length) {
-            return value[hour - 1].begin;
+        int idx = hour - 1;
+        if (idx >= 0 && idx < value.length) {
+            return value[idx].begin;
         } else {
             return null;
         }
@@ -56,8 +57,9 @@ public class Bells implements Parcelable, Emptyable {
 
     @Nullable
     public LocalTime getHourEnd(int hour) {
-        if (hour - 1 < value.length) {
-            return value[hour - 1].end;
+        int idx = hour - 1;
+        if (idx >= 0 && idx < value.length) {
+            return value[idx].end;
         } else {
             return null;
         }
