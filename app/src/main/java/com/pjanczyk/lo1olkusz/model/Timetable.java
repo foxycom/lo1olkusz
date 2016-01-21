@@ -21,6 +21,7 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -33,26 +34,28 @@ import java.util.TreeSet;
 public class Timetable implements Parcelable, Emptyable {
 
     @SerializedName("class")
-    private String className;
+    private final String className;
     @SerializedName("value")
-    private TimetableDay[] days;
+    private final TimetableDay[] days;
 
-    public Timetable() { }
+    public Timetable(@NonNull String className, @NonNull TimetableDay[] days) {
+        this.className = className;
+        this.days = days;
+    }
 
     public boolean isEmpty() {
-        return days == null || days.length == 0;
+        return days.length == 0;
     }
 
     public String getClassName() {
         return className;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public TimetableDay getDay(int day) {
-        return day < days.length ? days[day] : null;
+        if (day >= 0 && day < days.length)
+            return days[day];
+        else
+            return null;
     }
 
     /**
