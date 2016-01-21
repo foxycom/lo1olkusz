@@ -21,41 +21,39 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * Subject at a specific hour.
  */
-public class TimetableSubject implements Parcelable {
-    private String name;
-    private String classroom;
-    private String group;
+public final class TimetableSubject implements Parcelable {
+    private final String name;
+    private final String classroom;
+    private final String group;
 
-    public TimetableSubject() { }
+    public TimetableSubject(@NonNull String name,
+                            @Nullable String classroom,
+                            @Nullable String group) {
+        this.name = name;
+        this.classroom = classroom;
+        this.group = group;
+    }
 
+    @NonNull
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    @Nullable
     public String getClassroom() {
         return classroom;
     }
 
-    public void setClassroom(String classroom) {
-        this.classroom = classroom;
-    }
-
+    @Nullable
     public String getGroup() {
         return group;
     }
-
-    public void setGroup(String group) {
-        this.group = group;
-    }
-
 
     //parcelable part
 
