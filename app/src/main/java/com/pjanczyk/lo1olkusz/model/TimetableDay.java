@@ -21,6 +21,8 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -31,16 +33,36 @@ import com.google.gson.JsonSerializer;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class TimetableDay implements Parcelable {
-    private Map<Integer, TimetableSubject[]> subjects;
+public final class TimetableDay implements Parcelable {
+    private final TreeMap<Integer, TimetableSubject[]> subjects;
 
-    TimetableDay() { }
+    public TimetableDay(@NonNull Map<Integer, TimetableSubject[]> subjects) {
+        this.subjects = new TreeMap<>(subjects);
+    }
 
     public Map<Integer, TimetableSubject[]> getSubjects() {
-        return subjects;
+        return Collections.unmodifiableMap(subjects);
+    }
+
+    public boolean isEmpty() {
+        return subjects.isEmpty();
+    }
+
+    public int firstHour() {
+        return subjects.firstKey();
+    }
+
+    public int lastHour() {
+        return subjects.lastKey();
+    }
+
+    @Nullable
+    public TimetableSubject[] atHour(int hour) {
+        return subjects.get(hour);
     }
 
     //parcelable part
@@ -88,17 +110,16 @@ public class TimetableDay implements Parcelable {
         @Override
         public TimetableDay deserialize(JsonElement json, Type typeOfT,
                                         JsonDeserializationContext context) throws JsonParseException {
-            Type type = new TypeToken<Map<Integer, TimetableSubject[]>>(){}.getType();
-            TimetableDay result = new TimetableDay();
-            result.subjects = context.deserialize(json, type);
-            return result;
+            Type type = new TypeToken<TreeMap<Integer, TimetableSubject[]>>(){}.getType();
+            TreeMap<Integer, TimetableSubject[]> subjects = context.deserialize(json, type);
+            return new TimetableDay(subjects);
         }
     }
 
     public static class Serializer implements JsonSerializer<TimetableDay> {
         @Override
         public JsonElement serialize(TimetableDay src, Type typeOfSrc, JsonSerializationContext context) {
-            Type type = new TypeToken<Map<Integer, TimetableSubject>>(){}.getType();
+            Type type = new TypeToken<TreeMap<Integer, TimetableSubject>>(){}.getType();
             return context.serialize(src.subjects, type);
         }
     }
