@@ -21,56 +21,63 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.LocalDate;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
  * Replacements of a class on a specific day
  */
-public class Replacements implements Parcelable, Emptyable {
+public final class Replacements implements Parcelable, Emptyable {
 
     @SerializedName("class")
-    private String className;
-    private LocalDate date;
-    private Map<Integer, String> value;
+    private final String className;
+    private final LocalDate date;
+    @SerializedName("value")
+    private final Map<Integer, String> entries;
 
-    public Replacements() { }
-
-    public boolean isEmpty() {
-        return value == null || value.isEmpty();
+    public Replacements(@NonNull String className,
+                        @NonNull LocalDate date,
+                        @NonNull Map<Integer, String> entries) {
+        this.className = className;
+        this.date = date;
+        this.entries = new TreeMap<>(entries); // defensive copy
     }
 
+    public boolean isEmpty() {
+        return entries.isEmpty();
+    }
+
+    @NonNull
     public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
+    @NonNull
     public String getClassName() {
         return className;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public int size() {
-        return value.size();
+        return entries.size();
     }
 
+    @Nullable
     public String atHour(int hour) {
-        return value.get(hour);
+        return entries.get(hour);
     }
 
-    public void setValue(Map<Integer, String> value) {
-        this.value = value;
+    @NonNull
+    public Set<Map.Entry<Integer, String>> entrySet() {
+        return Collections.unmodifiableSet(entries.entrySet());
     }
 
     //parcelable part
@@ -80,9 +87,9 @@ public class Replacements implements Parcelable, Emptyable {
         date = new LocalDate(in.readInt(), in.readInt(), in.readInt());
 
         int size = in.readInt();
-        value = new TreeMap<>();
+        entries = new TreeMap<>();
         for (int i = 0; i < size; i++) {
-            value.put(in.readInt(), in.readString());
+            entries.put(in.readInt(), in.readString());
         }
     }
 
@@ -99,8 +106,8 @@ public class Replacements implements Parcelable, Emptyable {
         dest.writeInt(date.getMonthOfYear());
         dest.writeInt(date.getDayOfMonth());
 
-        dest.writeInt(value.size());
-        for (Map.Entry<Integer, String> entry : value.entrySet()) {
+        dest.writeInt(entries.size());
+        for (Map.Entry<Integer, String> entry : entries.entrySet()) {
             dest.writeInt(entry.getKey());
             dest.writeString(entry.getValue());
         }
@@ -117,4 +124,5 @@ public class Replacements implements Parcelable, Emptyable {
             return new Replacements[size];
         }
     };
+
 }

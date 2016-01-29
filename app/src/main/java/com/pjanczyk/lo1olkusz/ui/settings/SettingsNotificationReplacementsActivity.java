@@ -94,12 +94,12 @@ public class SettingsNotificationReplacementsActivity extends AppCompatPreferenc
     private void testNotificationRepls() {
         Settings settings = new Settings(this);
 
-        Replacements repls = new Replacements();
-        repls.setDate(LocalDate.now());
-        repls.setClassName(settings.getUserClass());
+        LocalDate date = LocalDate.now();
+        String className = settings.getUserClass();
         Map<Integer, String> value = new TreeMap<>();
         value.put(1, "test");
-        repls.setValue(value);
+
+        Replacements repls = new Replacements(className, date, value);
 
         Notifications.handleUserReplacements(this, repls);
     }
