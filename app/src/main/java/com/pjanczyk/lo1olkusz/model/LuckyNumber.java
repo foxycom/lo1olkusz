@@ -21,34 +21,31 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 import org.joda.time.LocalDate;
 
-public class LuckyNumber implements Parcelable, Emptyable {
+public final class LuckyNumber implements Parcelable, Emptyable {
 
-    private int value = 0;
-    private LocalDate date;
+    private final int value;
+    private final LocalDate date;
 
-    public LuckyNumber() { }
+    public LuckyNumber(@NonNull LocalDate date, int value) {
+        this.date = date;
+        this.value = value;
+    }
 
     public boolean isEmpty() {
-        return value == 0;
+        return value <= 0;
     }
 
     public int getValue() {
         return value;
     }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
+    @NonNull
     public LocalDate getDate() {
         return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 
     //parcelable part

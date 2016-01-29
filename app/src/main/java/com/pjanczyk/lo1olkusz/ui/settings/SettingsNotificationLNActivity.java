@@ -90,10 +90,8 @@ public class SettingsNotificationLNActivity extends AppCompatPreferenceActivity 
     }
 
     private void testNotificationLN() {
-        LuckyNumber ln = new LuckyNumber();
-        ln.setDate(LocalDate.now());
         Settings settings = new Settings(this);
-        ln.setValue(settings.getUserNumber());
+        LuckyNumber ln = new LuckyNumber(LocalDate.now(), settings.getUserNumber());
         Notifications.handleUserLN(this, ln);
     }
 }
