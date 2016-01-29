@@ -21,6 +21,7 @@ package com.pjanczyk.lo1olkusz.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.JsonArray;
@@ -34,45 +35,79 @@ import com.google.gson.JsonSerializer;
 import org.joda.time.LocalTime;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class Bells implements Parcelable, Emptyable {
+public final class Bells implements Parcelable, Emptyable {
 
-    private TimeSpan[] value;
+    private static final Hour UNDEFINED_HOUR = new Hour(null, null);
 
-    public Bells() { }
+    private final Hour[] hours;
 
-    public boolean isEmpty() {
-        return value == null || value.length == 0;
+    public Bells(@NonNull Collection<Hour> hours) {
+        this.hours = hours.toArray(new Hour[hours.size()]); // defensive copy
     }
 
-    @Nullable
-    public LocalTime getHourBegin(int hour) {
+    public boolean isEmpty() {
+        return hours.length == 0;
+    }
+
+    public int size() {
+        return hours.length;
+    }
+
+    @NonNull
+    public Hour get(int hour) {
         int idx = hour - 1;
-        if (idx >= 0 && idx < value.length) {
-            return value[idx].begin;
-        } else {
-            return null;
+        if (idx >= 0 && idx < hours.length) {
+            return hours[idx];
+        }
+        else {
+            return UNDEFINED_HOUR;
         }
     }
 
     @Nullable
+    @Deprecated
+    public LocalTime getHourBegin(int hour) {
+        return get(hour).begin;
+    }
+
+    @Nullable
+    @Deprecated
     public LocalTime getHourEnd(int hour) {
-        int idx = hour - 1;
-        if (idx >= 0 && idx < value.length) {
-            return value[idx].end;
-        } else {
-            return null;
+        return get(hour).end;
+    }
+
+    public static class Hour {
+        private final LocalTime begin;
+        private final LocalTime end;
+
+        public Hour(@Nullable LocalTime begin, @Nullable LocalTime end) {
+            this.begin = begin;
+            this.end = end;
+        }
+
+        @Nullable
+        public LocalTime getBegin() {
+            return begin;
+        }
+
+        @Nullable
+        public LocalTime getEnd() {
+            return end;
         }
     }
 
     //parcelable part
 
     public Bells(Parcel in) {
-        value = new TimeSpan[in.readInt()];
-        for (int i = 0; i < value.length; i++) {
+        hours = new Hour[in.readInt()];
+        for (int i = 0; i < hours.length; i++) {
             int begin = in.readInt();
             int end = in.readInt();
-            value[i] = new TimeSpan(
+            hours[i] = new Hour(
                     begin == 0 ? null : new LocalTime((long) begin),
                     end == 0 ? null : new LocalTime((long) end));
         }
@@ -85,10 +120,10 @@ public class Bells implements Parcelable, Emptyable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(value.length);
-        for (TimeSpan bell : value) {
-            dest.writeInt(bell.begin == null ? 0 : bell.begin.getMillisOfDay());
-            dest.writeInt(bell.end == null ? 0 : bell.end.getMillisOfDay());
+        dest.writeInt(hours.length);
+        for (Hour hour : hours) {
+            dest.writeInt(hour.begin == null ? 0 : hour.begin.getMillisOfDay());
+            dest.writeInt(hour.end == null ? 0 : hour.end.getMillisOfDay());
         }
     }
 
@@ -104,37 +139,45 @@ public class Bells implements Parcelable, Emptyable {
         }
     };
 
-    public static class TimeSpan {
+    // Json serializer & deserializer
 
-        public final LocalTime begin;
-        public final LocalTime end;
+    public static class Deserializer implements JsonDeserializer<Bells> {
+        @Override
+        public Bells deserialize(JsonElement json, Type typeOfT,
+                                    JsonDeserializationContext context) throws JsonParseException {
+            JsonElement value = json.getAsJsonObject().get("value");
+            if (value.isJsonNull()) {
+                return null;
+            }
+            else {
+                JsonArray array = value.getAsJsonArray();
+                List<Hour> hours = new ArrayList<>(array.size());
 
-        public TimeSpan(LocalTime begin, LocalTime end) {
-            this.begin = begin;
-            this.end = end;
-        }
+                for (JsonElement element : array) {
+                    JsonArray subArray = element.getAsJsonArray();
 
-        public static class Deserializer implements JsonDeserializer<TimeSpan> {
-            @Override
-            public TimeSpan deserialize(JsonElement json, Type typeOfT,
-                                        JsonDeserializationContext context) throws JsonParseException {
-                JsonArray array = json.getAsJsonArray();
-                LocalTime begin = context.deserialize(array.get(0), LocalTime.class);
-                LocalTime end = context.deserialize(array.get(1), LocalTime.class);
+                    LocalTime begin = context.deserialize(subArray.get(0), LocalTime.class);
+                    LocalTime end = context.deserialize(subArray.get(1), LocalTime.class);
+                    hours.add(new Hour(begin, end));
+                }
 
-                return new TimeSpan(begin, end);
+                return new Bells(hours);
             }
         }
+    }
 
-        public static class Serializer implements JsonSerializer<TimeSpan> {
-            @Override
-            public JsonElement serialize(TimeSpan src, Type typeOfSrc, JsonSerializationContext context) {
-                JsonArray result = new JsonArray();
-                result.add(context.serialize(src.begin));
-                result.add(context.serialize(src.end));
+    public static class Serializer implements JsonSerializer<Bells> {
+        @Override
+        public JsonElement serialize(Bells src, Type typeOfSrc, JsonSerializationContext context) {
+            JsonArray result = new JsonArray();
 
-                return result;
+            for (Hour entry : src.hours) {
+                JsonArray subArray = new JsonArray();
+                subArray.add(context.serialize(entry.begin));
+                subArray.add(context.serialize(entry.end));
             }
+
+            return result;
         }
     }
 }

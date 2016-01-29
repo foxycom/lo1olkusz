@@ -72,7 +72,7 @@ public class Api {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
                 .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
-                .registerTypeAdapter(Bells.TimeSpan.class, new Bells.TimeSpan.Deserializer())
+                .registerTypeAdapter(Bells.class, new Bells.Deserializer())
                 .registerTypeAdapter(TimetableDay.class, new TimetableDay.Deserializer())
                 .create();
 
