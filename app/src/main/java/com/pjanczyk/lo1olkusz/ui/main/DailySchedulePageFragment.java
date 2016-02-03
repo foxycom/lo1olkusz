@@ -29,10 +29,10 @@ import android.widget.TextView;
 import com.pjanczyk.lo1olkusz.R;
 import com.pjanczyk.lo1olkusz.model.Bells;
 import com.pjanczyk.lo1olkusz.model.LuckyNumber;
-import com.pjanczyk.lo1olkusz.storage.SavedLuckyNumbers;
 import com.pjanczyk.lo1olkusz.model.Replacements;
-import com.pjanczyk.lo1olkusz.storage.SavedReplacements;
 import com.pjanczyk.lo1olkusz.model.TimetableDay;
+import com.pjanczyk.lo1olkusz.storage.SavedLuckyNumbers;
+import com.pjanczyk.lo1olkusz.storage.SavedReplacements;
 import com.pjanczyk.lo1olkusz.utils.TimeFormatter;
 
 import org.joda.time.LocalDate;
@@ -125,10 +125,8 @@ public class DailySchedulePageFragment extends Fragment {
         }
 
         HourList hourList = (HourList) view.findViewById(R.id.hour_list);
-
-        if (timetableDay != null) {
-            hourList.setContent(timetableDay, bells, groups, replacements);
-        }
+        boolean today = date.equals(LocalDate.now());
+        hourList.setData(today, timetableDay, bells, groups, replacements);
 
         return view;
     }

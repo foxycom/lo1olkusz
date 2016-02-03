@@ -34,4 +34,67 @@
 
     <color name="cards_background">#e2e2e2</color>
     <color name="background">#fafafa</color>
+
+    <color name="hour_list_normal_1">#000</color>
+    <color name="hour_list_normal_2">@color/text_secondary_light</color>
+    <color name="hour_list_normal_3">@color/text_hint_light</color>
+
+    <color name="hour_list_active_1">#0D47A1</color>
+    <color name="hour_list_active_2">#9f0D47A1</color>
+    <color name="hour_list_active_3">#5f0D47A1</color>
+
+    <array name="hour_list_lesson_separator">
+        <!-- primary -->
+        <item>#1E000000</item>
+        <!-- active primary -->
+        <item>#2e0D47A1</item>
+    </array>
+
+    <array name="hour_list_break_line">
+        <!-- primary -->
+        <item>#e1e1e1</item>
+        <!-- active primary -->
+        <item>@color/hour_list_active_2</item>
+    </array>
+
+    <array name="hour_list_break_text">
+        <!-- primary -->
+        <item>#d0d0d0</item>
+        <!-- active primary -->
+        <item>@color/hour_list_active_1</item>
+    </array>
+
+    <array name="hour_list_hour_number">
+        <!-- secondary -->
+        <item>@color/hour_list_normal_3</item>
+        <!-- primary -->
+        <item>@color/teal_500</item>
+        <!-- active secondary -->
+        <item>@color/hour_list_active_3</item>
+        <!-- active primary -->
+        <item>#1A237E</item>
+    </array>
+
+    <array name="hour_list_lesson_name">
+        <!-- secondary -->
+        <item>@color/hour_list_normal_3</item>
+        <!-- primary -->
+        <item>@color/hour_list_normal_1</item>
+        <!-- active secondary -->
+        <item>@color/hour_list_active_3</item>
+        <!-- active primary -->
+        <item>@color/hour_list_active_1</item>
+    </array>
+
+    <array name="hour_list_classroom">
+        <!-- secondary -->
+        <item>@color/hour_list_normal_3</item>
+        <!-- primary -->
+        <item>@color/hour_list_normal_2</item>
+        <!-- active secondary -->
+        <item>@color/hour_list_active_3</item>
+        <!-- active primary -->
+        <item>@color/hour_list_active_2</item>
+    </array>
+
 </resources>

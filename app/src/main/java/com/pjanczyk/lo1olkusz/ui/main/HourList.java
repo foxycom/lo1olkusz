@@ -20,231 +20,266 @@
 package com.pjanczyk.lo1olkusz.ui.main;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.ArrayRes;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.pjanczyk.lo1olkusz.R;
 import com.pjanczyk.lo1olkusz.model.Bells;
+import com.pjanczyk.lo1olkusz.model.HourData;
 import com.pjanczyk.lo1olkusz.model.Replacements;
 import com.pjanczyk.lo1olkusz.model.TimetableDay;
 import com.pjanczyk.lo1olkusz.model.TimetableSubject;
 
 import org.joda.time.LocalTime;
+import org.joda.time.Period;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-//TODO: add a progress bar that shows elapsed time
-public class HourList extends LinearLayout {
+/**
+ * A view of lessons and breaks showed in a vertical list,
+ * where the current hour/break is highlighted.
+ */
+public class HourList extends AbstractTimedList {
 
-    private TimetableDay timetableDay;
-    private Bells bells;
-    private Set<String> groups;
-    private Replacements replacements;
+    private HourData[] data;
+    private boolean today;
 
     public HourList(Context context) {
-        super(context);
-        init();
+        this(context, null);
     }
 
     public HourList(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
+        this(context, attrs, 0);
     }
 
     public HourList(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
-    }
 
-    private void init() {
         final int sizeInDp = 5;
         float scale = getResources().getDisplayMetrics().density;
         int dpAsPixels = (int) (sizeInDp * scale + 0.5f);
 
         setPadding(0, dpAsPixels, 0, dpAsPixels);
-        setOrientation(VERTICAL);
     }
 
-    public void setContent(TimetableDay timetableDay,
-                         Bells bells,
-                         Set<String> groups,
-                         Replacements replacements) {
-        this.timetableDay = timetableDay;
-        this.bells = bells;
-        this.groups = groups;
-        this.replacements = replacements;
+    public void setData(boolean today,
+                        @Nullable TimetableDay timetable,
+                        @Nullable Bells bells,
+                        @Nullable Set<String> groups,
+                        @Nullable Replacements replacements) {
 
-        initializeViews();
+        this.today = today;
+
+        HourData.Factory factory = new HourData.Factory(timetable, bells, groups, replacements);
+        this.data = factory.getAll();
+
+        super.notifyDataSetChanged();
     }
 
-    public void initializeViews() {
-
-        removeAllViews();
-
+    @Override
+    protected View createItemView(int position, ViewGroup parent, boolean active) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
+        ViewCreator vc;
 
-        if (timetableDay != null) {
+        if (position % 2 == 0) { //lesson
+            vc = new HourViewCreator(data[position / 2]);
+        } else { //break
+            HourData previous = data[(position - 1) / 2];
+            HourData next = data[(position + 1) / 2];
+            vc = new BreakViewCreator(previous.getEndTime(), next.getBeginTime());
+        }
 
-            int lastHour = -1;
+        return vc.createView(inflater, parent, active);
+    }
 
-            for (Map.Entry<Integer, TimetableSubject[]> entry : timetableDay.getSubjects().entrySet()) {
-                int hour = entry.getKey();
-                List<TimetableSubject> subjects = Arrays.asList(entry.getValue());
+    @Override
+    protected LocalTime getItemBeginTime(int position) {
+        if (!today) return null;
 
-                List<TimetableSubject> primary = new ArrayList<>();
-                List<TimetableSubject> secondary = new ArrayList<>();
-                separateSubjects(subjects, primary, secondary);
+        if (position % 2 == 1) { //break
+            int previousHour = (position - 1) / 2;
+            return data[previousHour].getEndTime();
+        } else { //lesson
+            int hour = position / 2;
+            return data[hour].getBeginTime();
+        }
+    }
 
-                if (!primary.isEmpty() || !secondary.isEmpty()) {
+    @Override
+    protected LocalTime getItemEndTime(int position) {
+        if (!today) return null;
 
-                    if (lastHour != -1) {
-                        //add empty rows
-                        while (hour - lastHour > 1) {
-                            lastHour++;
-                            addRow(inflater, lastHour,
-                                    Collections.<TimetableSubject>emptyList(),
-                                    Collections.<TimetableSubject>emptyList(),
-                                    null);
-                        }
-                    }
+        if (position % 2 == 1) { //break
+            int nextHour = (position + 1) / 2;
+            return data[nextHour].getBeginTime();
+        } else { //lesson
+            int hour = position / 2;
+            return data[hour].getEndTime();
+        }
+    }
 
-                    String replacement = null;
-                    if (replacements != null) {
-                        replacement = replacements.atHour(hour);
-                    }
+    @Override
+    protected int getItemCount() {
+        if (data.length == 0)
+            return 0;
+        else
+            return 2 * data.length - 1;
+    }
 
-                    addRow(inflater, hour, primary, secondary, replacement);
+    private int getColorResource(@ArrayRes int resId, int index) {
+        TypedArray array = getResources().obtainTypedArray(resId);
+        int color = array.getColor(index, 0);
+        array.recycle();
 
-                    lastHour = hour;
+        return color;
+    }
+
+    private interface ViewCreator {
+        View createView(LayoutInflater inflater,
+                        ViewGroup parent,
+                        boolean active);
+
+    }
+
+    private class BreakViewCreator implements ViewCreator {
+
+        public final LocalTime beginTime;
+        public final LocalTime endTime;
+
+        public BreakViewCreator(LocalTime beginTime, LocalTime endTime) {
+            this.beginTime = beginTime;
+            this.endTime = endTime;
+        }
+
+        @Override
+        public View createView(LayoutInflater inflater, ViewGroup parent, boolean active) {
+            View view = inflater.inflate(R.layout.hour_list_break, parent, false);
+
+            TextView viewMinutes = (TextView) view.findViewById(R.id.minutes_text);
+            View line = view.findViewById(R.id.horizontal_line);
+
+            if (beginTime != null && endTime != null) {
+                Period period = new Period(beginTime, endTime);
+                int minutes = period.getMinutes();
+
+                viewMinutes.setText(String.format("%d", minutes));
+            }
+
+            int state = active ? 1 : 0;
+            int minutesColor = getColorResource(R.array.hour_list_break_text, state);
+            int lineColor = getColorResource(R.array.hour_list_break_line, state);
+
+            viewMinutes.setTextColor(minutesColor);
+            line.setBackgroundColor(lineColor);
+
+            return view;
+        }
+    }
+
+    private class HourViewCreator implements ViewCreator {
+        private final HourData data;
+
+        public HourViewCreator(HourData data) {
+            this.data = data;
+        }
+
+        @Override
+        public View createView(LayoutInflater inflater, ViewGroup parent, boolean active) {
+            boolean primary = !data.getPrimarySubjects().isEmpty();
+
+            View row = inflater.inflate(R.layout.hour_list_hour, parent, false);
+
+            ViewGroup containerCells = (ViewGroup) row.findViewById(R.id.container_cells);
+            TextView textHour = (TextView) row.findViewById(R.id.text_hour);
+            TextView textBegin = (TextView) row.findViewById(R.id.text_begin);
+            TextView textEnd = (TextView) row.findViewById(R.id.text_end);
+            TextView textReplacement = (TextView) row.findViewById(R.id.text_replacement);
+
+            //hour
+            textHour.setText(String.format("%d.", data.getHourNo()));
+
+            //begin & end time
+            LocalTime begin = data.getBeginTime();
+            if (begin != null) {
+                textBegin.setText(begin.toString("HH:mm"));
+            }
+            LocalTime end = data.getEndTime();
+            if (end != null) {
+                textEnd.setText(end.toString("HH:mm"));
+            }
+
+            //subjects
+            boolean firstCell = true;
+            for (TimetableSubject subject : data.getPrimarySubjects()) {
+                if (!firstCell) {
+                    addSeparator(inflater, containerCells, active);
                 }
+                addLessonCell(inflater, containerCells, subject, true, active);
+                firstCell = false;
             }
-        }
-    }
-
-    private void separateSubjects(List<TimetableSubject> subjects,
-                                  List<TimetableSubject> primary,
-                                  List<TimetableSubject> secondary) {
-
-        if (groups == null || groups.size() == 0) {
-            primary.addAll(subjects);
-        } else {
-
-            List<TimetableSubject> temp = new ArrayList<>();
-
-            for (TimetableSubject subject : subjects) {
-                if (subject.getGroup() == null) {
-                    temp.add(subject);
-                } else if (groups.contains(subject.getGroup())) {
-                    primary.add(subject);
-                } else {
-                    secondary.add(subject);
+            for (TimetableSubject subject : data.getSecondarySubjects()) {
+                if (!firstCell) {
+                    addSeparator(inflater, containerCells, active);
                 }
+                addLessonCell(inflater, containerCells, subject, false, active);
+                firstCell = false;
             }
 
-            if (primary.size() == 0) {
-                primary.addAll(temp);
-            }
-            else {
-                secondary.addAll(temp);
-            }
-        }
-    }
-    private void addRow(LayoutInflater inflater,
-                        int hour,
-                        Collection<TimetableSubject> primary,
-                        Collection<TimetableSubject> secondary,
-                        String replacement) {
-
-        if (this.getChildCount() > 0) {
-            View separator = inflater.inflate(R.layout.hours_list_row_separator, this, false);
-
-            LocalTime breakBegin = null;
-            LocalTime breakEnd = null;
-
-            if (bells != null) {
-                breakBegin = bells.getHourEnd(hour - 1);
-                breakEnd = bells.getHourBegin(hour);
+            //replacement
+            if (data.getReplacement() != null) {
+                textReplacement.setVisibility(View.VISIBLE);
+                textReplacement.setText(data.getReplacement());
             }
 
-            if (breakBegin != null && breakEnd != null) {
-                int minutes = (breakEnd.getMillisOfDay() - breakBegin.getMillisOfDay()) / 60000;
+            int state = (active ? 0b10 : 0) + (primary ? 0b01 : 0);
+            int hourColor = getColorResource(R.array.hour_list_hour_number, state);
+            textHour.setTextColor(hourColor);
 
-                TextView minutesText = (TextView) separator.findViewById(R.id.minutes_text);
-                minutesText.setText(Integer.toString(minutes));
-            }
-
-            this.addView(separator);
+            return row;
         }
 
-        int resId = primary.size() == 0 ? R.layout.hours_list_row_secondary : R.layout.hours_list_row;
-        View row = inflater.inflate(resId, this, false);
+        private void addSeparator(LayoutInflater inflater,
+                                  ViewGroup containerCells,
+                                  boolean active) {
 
-        ViewGroup containerCells = (ViewGroup) row.findViewById(R.id.container_cells);
-        TextView textHour = (TextView) row.findViewById(R.id.text_hour);
-        TextView textBegin = (TextView) row.findViewById(R.id.text_begin);
-        TextView textEnd = (TextView) row.findViewById(R.id.text_end);
-        TextView textReplacement = (TextView) row.findViewById(R.id.text_replacement);
+            View separator = inflater.inflate(R.layout.hour_list_lesson_separator,
+                    containerCells, false);
 
-        textHour.setText(hour + ".");
+            int state = active ? 1 : 0;
+            int color = getColorResource(R.array.hour_list_lesson_separator, state);
+            separator.setBackgroundColor(color);
 
-        LocalTime beginTime = null;
-        LocalTime endTime = null;
-        if (bells != null) {
-            beginTime = bells.getHourBegin(hour);
-            endTime = bells.getHourEnd(hour);
-        }
-        textBegin.setText(beginTime == null ? null : beginTime.toString("HH:mm"));
-        textEnd.setText(endTime == null ? null : endTime.toString("HH:mm"));
-
-        boolean firstCell = true;
-        for (TimetableSubject subject : primary) {
-            if (!firstCell) {
-                inflater.inflate(R.layout.hours_list_cell_separator, containerCells);
-            }
-            addCell(inflater, containerCells, subject, true);
-            firstCell = false;
-        }
-        for (TimetableSubject subject : secondary) {
-            if (!firstCell) {
-                inflater.inflate(R.layout.hours_list_cell_separator, containerCells);
-            }
-            addCell(inflater, containerCells, subject, false);
-            firstCell = false;
+            containerCells.addView(separator);
         }
 
-        if (replacement != null) {
-            textReplacement.setVisibility(View.VISIBLE);
-            textReplacement.setText(replacement);
+        private void addLessonCell(LayoutInflater inflater,
+                                   ViewGroup containerCells,
+                                   TimetableSubject subject,
+                                   boolean primary,
+                                   boolean active) {
+
+            View cell = inflater.inflate(R.layout.hour_list_lesson, containerCells, false);
+
+            TextView textName = (TextView) cell.findViewById(R.id.text_name);
+            TextView textClassroom = (TextView) cell.findViewById(R.id.text_classroom);
+
+            textName.setText(subject.getName());
+            textClassroom.setText(subject.getClassroom());
+
+            int state = (active ? 0b10 : 0) + (primary ? 0b01 : 0);
+            int nameColor = getColorResource(R.array.hour_list_lesson_name, state);
+            int classroomColor = getColorResource(R.array.hour_list_classroom, state);
+
+            textName.setTextColor(nameColor);
+            textClassroom.setTextColor(classroomColor);
+
+            containerCells.addView(cell);
         }
-
-        this.addView(row);
-    }
-
-    private void addCell(LayoutInflater inflater,
-                         ViewGroup containerCells,
-                         TimetableSubject subject,
-                         boolean primary) {
-
-        int resourceId = primary ? R.layout.hours_list_cell : R.layout.hours_list_cell_secondary;
-
-        View cell = inflater.inflate(resourceId, containerCells, false);
-
-        TextView textName = (TextView) cell.findViewById(R.id.text_name);
-        TextView textClassroom = (TextView) cell.findViewById(R.id.text_classroom);
-
-        textName.setText(subject.getName());
-        textClassroom.setText(subject.getClassroom());
-
-        containerCells.addView(cell);
     }
 }

@@ -83,9 +83,7 @@ public class TimetablePageFragment extends Fragment {
         View view = inflater.inflate(R.layout.timetable_page, container, false);
 
         HourList hourList = (HourList) view.findViewById(R.id.hour_list);
-        if (timetableDay != null) {
-            hourList.setContent(timetableDay, bells, groups, null);
-        }
+        hourList.setData(false, timetableDay, bells, groups, null);
 
         return view;
     }
