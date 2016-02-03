@@ -26,7 +26,6 @@ import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -35,8 +34,8 @@ public final class HourData {
 
     private int hourNo;
     private Bells.Hour bells;
-    private Collection<TimetableSubject> primarySubjects;
-    private Collection<TimetableSubject> secondarySubjects;
+    private List<TimetableSubject> primarySubjects;
+    private List<TimetableSubject> secondarySubjects;
     private String replacement;
 
     public int getHourNo() {
@@ -54,13 +53,13 @@ public final class HourData {
     }
 
     @NonNull
-    public Collection<TimetableSubject> getPrimarySubjects() {
-        return Collections.unmodifiableCollection(primarySubjects);
+    public List<TimetableSubject> getPrimarySubjects() {
+        return Collections.unmodifiableList(primarySubjects);
     }
 
     @NonNull
-    public Collection<TimetableSubject> getSecondarySubjects() {
-        return Collections.unmodifiableCollection(secondarySubjects);
+    public List<TimetableSubject> getSecondarySubjects() {
+        return Collections.unmodifiableList(secondarySubjects);
     }
 
     @Nullable
