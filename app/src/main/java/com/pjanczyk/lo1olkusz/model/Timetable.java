@@ -31,7 +31,7 @@ import java.util.TreeSet;
 /**
  * Timetable of a specific class
  */
-public class Timetable implements Parcelable, Emptyable {
+public final class Timetable implements Parcelable, Emptyable {
 
     @SerializedName("class")
     private final String className;
