@@ -41,8 +41,6 @@ import java.util.List;
 
 public final class Bells implements Parcelable, Emptyable {
 
-    private static final Hour UNDEFINED_HOUR = new Hour(null, null);
-
     private final Hour[] hours;
 
     public Bells(@NonNull Collection<Hour> hours) {
@@ -64,7 +62,7 @@ public final class Bells implements Parcelable, Emptyable {
             return hours[idx];
         }
         else {
-            return UNDEFINED_HOUR;
+            return Hour.EMPTY;
         }
     }
 
@@ -81,6 +79,8 @@ public final class Bells implements Parcelable, Emptyable {
     }
 
     public static class Hour {
+        public static final Hour EMPTY = new Hour(null, null);
+
         private final LocalTime begin;
         private final LocalTime end;
 

@@ -123,6 +123,8 @@ public final class HourData {
 
             if (bells != null) {
                 data.bells = bells.get(hourNo);
+            } else {
+                data.bells = Bells.Hour.EMPTY;
             }
 
             if (replacements != null) {
