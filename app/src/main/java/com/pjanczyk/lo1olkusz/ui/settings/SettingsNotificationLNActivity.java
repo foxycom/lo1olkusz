@@ -22,7 +22,6 @@ package com.pjanczyk.lo1olkusz.ui.settings;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.pjanczyk.lo1olkusz.BuildConfig;
