@@ -24,20 +24,10 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-
 import org.joda.time.LocalTime;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 public final class Bells implements Parcelable, Emptyable {
 
@@ -60,25 +50,27 @@ public final class Bells implements Parcelable, Emptyable {
         int idx = hour - 1;
         if (idx >= 0 && idx < hours.length) {
             return hours[idx];
-        }
-        else {
+        } else {
             return Hour.EMPTY;
         }
     }
 
-    @Nullable
-    @Deprecated
-    public LocalTime getHourBegin(int hour) {
-        return get(hour).begin;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Bells bells = (Bells) o;
+
+        return Arrays.equals(hours, bells.hours);
     }
 
-    @Nullable
-    @Deprecated
-    public LocalTime getHourEnd(int hour) {
-        return get(hour).end;
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(hours);
     }
 
-    public static class Hour {
+    public final static class Hour {
         public static final Hour EMPTY = new Hour(null, null);
 
         private final LocalTime begin;
@@ -98,6 +90,25 @@ public final class Bells implements Parcelable, Emptyable {
         public LocalTime getEnd() {
             return end;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Hour hour = (Hour) o;
+
+            if (begin != null ? !begin.equals(hour.begin) : hour.begin != null) return false;
+            return !(end != null ? !end.equals(hour.end) : hour.end != null);
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = begin != null ? begin.hashCode() : 0;
+            result = 31 * result + (end != null ? end.hashCode() : 0);
+            return result;
+        }
     }
 
     //parcelable part
@@ -108,8 +119,8 @@ public final class Bells implements Parcelable, Emptyable {
             int begin = in.readInt();
             int end = in.readInt();
             hours[i] = new Hour(
-                    begin == 0 ? null : new LocalTime((long) begin),
-                    end == 0 ? null : new LocalTime((long) end));
+                    begin == 0 ? null : LocalTime.fromMillisOfDay(begin),
+                    end == 0 ? null : LocalTime.fromMillisOfDay(end));
         }
     }
 
@@ -138,46 +149,4 @@ public final class Bells implements Parcelable, Emptyable {
             return new Bells[size];
         }
     };
-
-    // Json serializer & deserializer
-
-    public static class Deserializer implements JsonDeserializer<Bells> {
-        @Override
-        public Bells deserialize(JsonElement json, Type typeOfT,
-                                    JsonDeserializationContext context) throws JsonParseException {
-            JsonElement value = json.getAsJsonObject().get("value");
-            if (value.isJsonNull()) {
-                return null;
-            }
-            else {
-                JsonArray array = value.getAsJsonArray();
-                List<Hour> hours = new ArrayList<>(array.size());
-
-                for (JsonElement element : array) {
-                    JsonArray subArray = element.getAsJsonArray();
-
-                    LocalTime begin = context.deserialize(subArray.get(0), LocalTime.class);
-                    LocalTime end = context.deserialize(subArray.get(1), LocalTime.class);
-                    hours.add(new Hour(begin, end));
-                }
-
-                return new Bells(hours);
-            }
-        }
-    }
-
-    public static class Serializer implements JsonSerializer<Bells> {
-        @Override
-        public JsonElement serialize(Bells src, Type typeOfSrc, JsonSerializationContext context) {
-            JsonArray result = new JsonArray();
-
-            for (Hour entry : src.hours) {
-                JsonArray subArray = new JsonArray();
-                subArray.add(context.serialize(entry.begin));
-                subArray.add(context.serialize(entry.end));
-            }
-
-            return result;
-        }
-    }
 }

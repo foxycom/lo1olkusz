@@ -22,9 +22,11 @@ package com.pjanczyk.lo1olkusz.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -33,39 +35,50 @@ import java.util.TreeSet;
  */
 public final class Timetable implements Parcelable, Emptyable {
 
-    @SerializedName("class")
     private final String className;
-    @SerializedName("value")
-    private final TimetableDay[] days;
+    private final List<TimetableDay> days;
 
-    public Timetable(@NonNull String className, @NonNull TimetableDay[] days) {
+    public Timetable(@NonNull String className, @Nullable List<TimetableDay> days) {
         this.className = className;
-        this.days = days;
+
+        if (days == null) {
+            this.days = Collections.emptyList();
+        } else {
+            this.days = new ArrayList<>(days); // defensive copy
+        }
     }
 
     public boolean isEmpty() {
-        return days.length == 0;
+        return days.isEmpty();
     }
 
+    @NonNull
     public String getClassName() {
         return className;
     }
 
+    @Nullable
     public TimetableDay getDay(int day) {
-        if (day >= 0 && day < days.length)
-            return days[day];
+        if (day >= 0 && day < days.size())
+            return days.get(day);
         else
             return null;
+    }
+
+    @NonNull
+    public List<TimetableDay> getAllDays() {
+        return Collections.unmodifiableList(days);
     }
 
     /**
      * @return all existing groups in this timetable
      */
+    @NonNull
     public Set<String> getAllGroups() {
         Set<String> groups = new TreeSet<>();
 
         for (TimetableDay d : days) {
-            for (TimetableSubject[] h : d.getSubjects().values()) {
+            for (List<TimetableSubject> h : d.getHours().values()) {
                 for (TimetableSubject s : h) {
                     String group = s.getGroup();
                     if (group != null) {
@@ -78,12 +91,28 @@ public final class Timetable implements Parcelable, Emptyable {
         return groups;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Timetable timetable = (Timetable) o;
+
+        return className.equals(timetable.className) && days.equals(timetable.days);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = className.hashCode();
+        result = 31 * result + days.hashCode();
+        return result;
+    }
 
     //parcelable part
 
     public Timetable(Parcel in) {
         className = in.readString();
-        days = in.createTypedArray(TimetableDay.CREATOR);
+        days = in.createTypedArrayList(TimetableDay.CREATOR);
     }
 
     @Override
@@ -94,7 +123,7 @@ public final class Timetable implements Parcelable, Emptyable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(className);
-        dest.writeParcelableArray(days, 0);
+        dest.writeTypedList(days);
     }
 
     public static final Parcelable.Creator CREATOR = new Creator() {

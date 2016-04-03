@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import org.joda.time.LocalTime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -117,7 +116,7 @@ public final class HourData {
             data.hourNo = hourNo;
 
             if (timetable != null) {
-                TimetableSubject[] subjects = timetable.atHour(hourNo);
+                List<TimetableSubject> subjects = timetable.atHour(hourNo);
                 separateSubjects(subjects, data);
             }
 
@@ -134,9 +133,9 @@ public final class HourData {
             return data;
         }
 
-        private void separateSubjects(TimetableSubject[] subjects, HourData data) {
+        private void separateSubjects(List<TimetableSubject> subjects, HourData data) {
             if (groups == null || groups.size() == 0) {
-                data.primarySubjects = Arrays.asList(subjects);
+                data.primarySubjects = subjects;
                 data.secondarySubjects = Collections.emptyList();
             } else {
                 List<TimetableSubject> unknown = new ArrayList<>();

@@ -22,6 +22,7 @@ package com.pjanczyk.lo1olkusz.storage;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.pjanczyk.lo1olkusz.json.ReplacementsSerializer;
 import com.pjanczyk.lo1olkusz.model.Replacements;
 
 import org.joda.time.LocalDate;
@@ -50,7 +51,7 @@ public class SavedReplacements {
     @Nullable
     public Replacements load(String className, LocalDate date) {
         String path = buildPath(className, date);
-        return FilesManager.load(path, Replacements.class);
+        return FilesManager.load(path, new ReplacementsSerializer());
     }
 
     /**
@@ -59,7 +60,7 @@ public class SavedReplacements {
      */
     public void save(Replacements replacements) {
         String path = buildPath(replacements.getClassName(), replacements.getDate());
-        FilesManager.save(replacements, path);
+        FilesManager.save(replacements, path, new ReplacementsSerializer());
     }
 
     /**

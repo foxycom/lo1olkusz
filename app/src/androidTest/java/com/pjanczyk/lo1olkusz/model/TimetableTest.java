@@ -22,41 +22,39 @@ package com.pjanczyk.lo1olkusz.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
+import static com.pjanczyk.testutils.CollectionsUtils.entry;
+import static com.pjanczyk.testutils.CollectionsUtils.list;
+import static com.pjanczyk.testutils.CollectionsUtils.map;
+import static com.pjanczyk.testutils.CollectionsUtils.set;
 import static org.junit.Assert.assertEquals;
 
 public class TimetableTest {
 
+    static final TimetableDay DAY_0 = new TimetableDay(map(
+            entry(1, list(
+                    new TimetableSubject("", null, "G1"),
+                    new TimetableSubject("", null, "G1")
+            ))
+    ));
+
+    static final TimetableDay DAY_1 = new TimetableDay(map(
+            entry(1, list(
+                    new TimetableSubject("", null, "G2"),
+                    new TimetableSubject("", null, "G3")
+            )),
+            entry(2, list(
+                    new TimetableSubject("", null, "G4"),
+                    new TimetableSubject("", null, null)
+            ))
+    ));
+
     Timetable timetable;
     Timetable empty;
-    TimetableDay day0;
-    TimetableDay day1;
 
     @Before
     public void setUp() throws Exception {
-        empty = new Timetable("CLASSNAME", new TimetableDay[0]);
-
-        TimetableSubject s1 = new TimetableSubject("", null, "G1");
-        TimetableSubject s2 = new TimetableSubject("", null, "G2");
-        TimetableSubject s3 = new TimetableSubject("", null, "G3");
-        TimetableSubject s4 = new TimetableSubject("", null, "G4");
-        TimetableSubject sn = new TimetableSubject("", null, null);
-
-        Map<Integer, TimetableSubject[]> subjects = new TreeMap<>();
-        subjects.put(1, new TimetableSubject[]{s1, s1});
-        day0 = new TimetableDay(subjects);
-
-        subjects = new TreeMap<>();
-        subjects.put(1, new TimetableSubject[]{s2, s3});
-        subjects.put(2, new TimetableSubject[]{s4, sn});
-        day1 = new TimetableDay(subjects);
-
-        timetable = new Timetable("CLASSNAME", new TimetableDay[]{day0, day1});
+        empty = new Timetable("CLASSNAME", null);
+        timetable = new Timetable("CLASSNAME", list(DAY_0, DAY_1));
     }
 
     @Test
@@ -73,20 +71,14 @@ public class TimetableTest {
     @Test
     public void testGetDay() throws Exception {
         assertEquals(null, timetable.getDay(-1));
-        assertEquals(day0, timetable.getDay(0));
-        assertEquals(day1, timetable.getDay(1));
+        assertEquals(DAY_0, timetable.getDay(0));
+        assertEquals(DAY_1, timetable.getDay(1));
         assertEquals(null, timetable.getDay(2));
     }
 
     @Test
     public void testGetAllGroups() throws Exception {
-        assertEquals(Collections.emptySet(), empty.getAllGroups());
-
-        Set<String> expected = new HashSet<>();
-        expected.add("G1");
-        expected.add("G2");
-        expected.add("G3");
-        expected.add("G4");
-        assertEquals(expected, timetable.getAllGroups());
+        assertEquals(set(), empty.getAllGroups());
+        assertEquals(set("G1", "G2", "G3", "G4"), timetable.getAllGroups());
     }
 }

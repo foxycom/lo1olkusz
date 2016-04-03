@@ -21,16 +21,25 @@ package com.pjanczyk.lo1olkusz.synchronization;
 
 import android.support.annotation.NonNull;
 
-import com.pjanczyk.lo1olkusz.json.NewsSerializer;
+import com.pjanczyk.lo1olkusz.json.Serializer;
 import com.pjanczyk.lo1olkusz.model.News;
+import com.pjanczyk.lo1olkusz.json.JsonParseException;
+import com.pjanczyk.lo1olkusz.utils.Urls;
 import com.pjanczyk.lo1olkusz.utils.network.BadResponseException;
 import com.pjanczyk.lo1olkusz.utils.network.HttpHelper;
+import com.pjanczyk.lo1olkusz.utils.network.HttpStatusCodeException;
 
 import java.io.IOException;
 
-public final class Api {
+class ApiImpl {
 
-    private Api() { }
+    private HttpHelper http;
+    private Serializer<News> serializer;
+
+    public ApiImpl(HttpHelper httpHelper, Serializer<News> serializer) {
+        this.http = httpHelper;
+        this.serializer = serializer;
+    }
 
     /**
      * @throws IOException          if an error occurs related to connection and getting response
@@ -39,11 +48,21 @@ public final class Api {
      *                              or invalid binary format)
      */
     @NonNull
-    public static News getNews(String androidId, int version, int timestamp)
-                               throws IOException, BadResponseException {
+    public News getNews(String androidId, int version, int timestamp)
+            throws IOException, BadResponseException {
 
-        ApiImpl api = new ApiImpl(new HttpHelper(), new NewsSerializer());
+        String url = buildUrl(androidId, version, timestamp);
 
-        return api.getNews(androidId, version, timestamp);
+        String response;
+        try {
+            response = http.getString(url);
+            return serializer.deserialize(response);
+        } catch (HttpStatusCodeException | JsonParseException e) {
+            throw new BadResponseException(e);
+        }
+    }
+
+    private String buildUrl(String androidId, int version, int timestamp) {
+        return String.format(Urls.API, timestamp, androidId, version);
     }
 }

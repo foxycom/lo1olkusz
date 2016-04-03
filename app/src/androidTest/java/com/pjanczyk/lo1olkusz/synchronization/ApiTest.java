@@ -19,31 +19,37 @@
 
 package com.pjanczyk.lo1olkusz.synchronization;
 
-import android.support.annotation.NonNull;
 
 import com.pjanczyk.lo1olkusz.json.NewsSerializer;
+import com.pjanczyk.lo1olkusz.json.Serializer;
 import com.pjanczyk.lo1olkusz.model.News;
-import com.pjanczyk.lo1olkusz.utils.network.BadResponseException;
 import com.pjanczyk.lo1olkusz.utils.network.HttpHelper;
 
-import java.io.IOException;
+import org.junit.Test;
 
-public final class Api {
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    private Api() { }
+public class ApiTest {
 
-    /**
-     * @throws IOException          if an error occurs related to connection and getting response
-     * @throws BadResponseException if gets invalid response from server
-     *                              (not specified content-length in header,
-     *                              or invalid binary format)
-     */
-    @NonNull
-    public static News getNews(String androidId, int version, int timestamp)
-                               throws IOException, BadResponseException {
+    @Test
+    public void testGetNews() throws Exception {
+        News expected = new News(123456, null, null, null, null, null);
 
-        ApiImpl api = new ApiImpl(new HttpHelper(), new NewsSerializer());
+        HttpHelper httpHelper = mock(HttpHelper.class);
 
-        return api.getNews(androidId, version, timestamp);
+        when(httpHelper.getString("http://lo1olkusz.tk/api/news/2222?aid=AID&v=1111"))
+                .thenReturn("RESPONSE");
+
+        Serializer<News> serializer = mock(NewsSerializer.class);
+        when(serializer.deserialize("RESPONSE")).thenReturn(expected);
+
+        ApiImpl api = new ApiImpl(httpHelper, serializer);
+        News actual = api.getNews("AID", 1111, 2222);
+
+        assertEquals(expected, actual);
+
     }
+
 }

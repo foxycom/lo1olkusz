@@ -21,6 +21,7 @@ package com.pjanczyk.lo1olkusz.storage;
 
 import android.content.Context;
 
+import com.pjanczyk.lo1olkusz.json.TimetableSerializer;
 import com.pjanczyk.lo1olkusz.model.Timetable;
 
 import java.io.File;
@@ -68,7 +69,7 @@ public class SavedTimetables {
      */
     public Timetable load(String className) {
         String path = buildPath(className);
-        return FilesManager.load(path, Timetable.class);
+        return FilesManager.load(path, new TimetableSerializer());
     }
 
     /**
@@ -77,7 +78,7 @@ public class SavedTimetables {
      */
     public void save(Timetable timetable) {
         String path = buildPath(timetable.getClassName());
-        FilesManager.save(timetable, path);
+        FilesManager.save(timetable, path, new TimetableSerializer());
     }
 
     private String buildPath(String className) {

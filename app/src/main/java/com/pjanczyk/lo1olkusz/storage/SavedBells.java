@@ -22,6 +22,7 @@ package com.pjanczyk.lo1olkusz.storage;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.pjanczyk.lo1olkusz.json.BellsSerializer;
 import com.pjanczyk.lo1olkusz.model.Bells;
 
 public class SavedBells {
@@ -38,7 +39,7 @@ public class SavedBells {
     @Nullable
     public Bells load() {
         String path = buildPath();
-        return FilesManager.load(path, Bells.class);
+        return FilesManager.load(path, new BellsSerializer());
     }
 
     /**
@@ -46,7 +47,7 @@ public class SavedBells {
      */
     public void save(Bells bells) {
         String path = buildPath();
-        FilesManager.save(bells, path);
+        FilesManager.save(bells, path, new BellsSerializer());
     }
 
     private String buildPath() {

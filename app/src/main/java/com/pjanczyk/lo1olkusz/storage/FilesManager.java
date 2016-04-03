@@ -22,18 +22,12 @@ package com.pjanczyk.lo1olkusz.storage;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.pjanczyk.lo1olkusz.model.Bells;
+import com.pjanczyk.lo1olkusz.json.Serializer;
 import com.pjanczyk.lo1olkusz.model.Emptyable;
-import com.pjanczyk.lo1olkusz.model.TimetableDay;
 import com.pjanczyk.lo1olkusz.utils.FileUtils;
-import com.pjanczyk.lo1olkusz.utils.LocalDateTypeAdapter;
-import com.pjanczyk.lo1olkusz.utils.LocalTimeTypeAdapter;
+import com.pjanczyk.lo1olkusz.json.JsonParseException;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,12 +41,12 @@ final class FilesManager {
      * If file does not exist, returns null.
      */
     @Nullable
-    public static <T extends Emptyable> T load(@NonNull String path, Class<T> klass) {
+    public static <T extends Emptyable> T load(@NonNull String path, Serializer<T> serializer) {
         try {
             String content = FileUtils.readFromFile(path);
             if (content == null) return null; //if file doesn't exist
 
-            T result = fromJson(content, klass);
+            T result = serializer.deserialize(content);
             if (result == null || result.isEmpty()) {
                 delete(path); //delete the corrupted file
                 return null;
@@ -60,7 +54,7 @@ final class FilesManager {
 
             return result;
         }
-        catch (IOException e) {
+        catch (JsonParseException | IOException e) {
             throw new RuntimeException(e); //this should never happen
         }
     }
@@ -69,12 +63,14 @@ final class FilesManager {
      * Converts {@param object} to json and saves it at {@param path} on the local storage.
      * If object is empty, does not save it but deletes an existing file.
      */
-    public static <T extends Emptyable> void save(@NonNull T object, @NonNull String path) {
+    public static <T extends Emptyable> void save(@NonNull T object,
+                                                  @NonNull String path,
+                                                  @NonNull Serializer<T> serializer) {
         if (object.isEmpty()) {
             delete(path);
         }
         else {
-            String content = toJson(object);
+            String content = serializer.serialize(object);
             try {
                 FileUtils.createDirectoriesForFile(path);
                 FileUtils.writeToFile(path, content);
@@ -108,37 +104,4 @@ final class FilesManager {
             throw new RuntimeException(e); //this should have never happen
         }
     }
-
-    /**
-     * @return object or null on failure.
-     */
-    @Nullable
-    private static <T> T fromJson(@NonNull String content, Class<T> klass) {
-        try {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
-                    .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
-                    .registerTypeAdapter(Bells.class, new Bells.Deserializer())
-                    .registerTypeAdapter(TimetableDay.class, new TimetableDay.Deserializer())
-                    .create();
-
-            return gson.fromJson(content, klass);
-        }
-        catch (JsonSyntaxException e) {
-            return null;
-        }
-    }
-
-    @NonNull
-    private static <T> String toJson(@NonNull T object) {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter())
-                .registerTypeAdapter(LocalTime.class, new LocalTimeTypeAdapter())
-                .registerTypeAdapter(Bells.class, new Bells.Serializer())
-                .registerTypeAdapter(TimetableDay.class, new TimetableDay.Serializer())
-                .create();
-
-        return gson.toJson(object);
-    }
-
 }

@@ -24,8 +24,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.annotations.SerializedName;
-
 import org.joda.time.LocalDate;
 
 import java.util.Collections;
@@ -38,18 +36,20 @@ import java.util.TreeMap;
  */
 public final class Replacements implements Parcelable, Emptyable {
 
-    @SerializedName("class")
     private final String className;
     private final LocalDate date;
-    @SerializedName("value")
     private final Map<Integer, String> entries;
 
     public Replacements(@NonNull String className,
                         @NonNull LocalDate date,
-                        @NonNull Map<Integer, String> entries) {
+                        @Nullable Map<Integer, String> entries) {
         this.className = className;
         this.date = date;
-        this.entries = new TreeMap<>(entries); // defensive copy
+        if (entries == null) {
+            this.entries = Collections.emptyMap();
+        } else {
+            this.entries = new TreeMap<>(entries); // defensive copy
+        }
     }
 
     public boolean isEmpty() {
@@ -78,6 +78,26 @@ public final class Replacements implements Parcelable, Emptyable {
     @NonNull
     public Set<Map.Entry<Integer, String>> entrySet() {
         return Collections.unmodifiableSet(entries.entrySet());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Replacements that = (Replacements) o;
+
+        return className.equals(that.className)
+                && date.equals(that.date)
+                && entries.equals(that.entries);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = className.hashCode();
+        result = 31 * result + date.hashCode();
+        result = 31 * result + entries.hashCode();
+        return result;
     }
 
     //parcelable part

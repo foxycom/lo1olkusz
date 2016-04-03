@@ -22,6 +22,7 @@ package com.pjanczyk.lo1olkusz.storage;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.pjanczyk.lo1olkusz.json.LuckyNumberSerializer;
 import com.pjanczyk.lo1olkusz.model.LuckyNumber;
 
 import org.joda.time.LocalDate;
@@ -81,7 +82,7 @@ public class SavedLuckyNumbers {
     @Nullable
     public LuckyNumber load(LocalDate date) {
         String path = buildPath(date);
-        return FilesManager.load(path, LuckyNumber.class);
+        return FilesManager.load(path, new LuckyNumberSerializer());
     }
 
     /**
@@ -90,7 +91,7 @@ public class SavedLuckyNumbers {
      */
     public void save(LuckyNumber ln) {
         String path = buildPath(ln.getDate());
-        FilesManager.save(ln, path);
+        FilesManager.save(ln, path, new LuckyNumberSerializer());
     }
 
     private String buildPath() {

@@ -19,13 +19,77 @@
 
 package com.pjanczyk.lo1olkusz.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class News {
-    public Bells bells;
-    public List<Timetable> timetables;
-    public List<LuckyNumber> luckyNumbers;
-    public List<Replacements> replacements;
-    public Integer version;
-    public int timestamp;
+    public final int timestamp;
+    @Nullable public final Integer version;
+    @Nullable public final Bells bells;
+    @NonNull public final List<Timetable> timetables;
+    @NonNull public final List<LuckyNumber> luckyNumbers;
+    @NonNull public final List<Replacements> replacements;
+
+    public News(int timestamp,
+                @Nullable Integer version,
+                @Nullable Bells bells,
+                @Nullable List<Timetable> timetables,
+                @Nullable List<LuckyNumber> luckyNumbers,
+                @Nullable List<Replacements> replacements) {
+
+        this.timestamp = timestamp;
+
+        this.version = version;
+
+        this.bells = bells;
+
+        if (timetables == null) {
+            this.timetables = Collections.emptyList();
+        } else {
+            this.timetables = Collections.unmodifiableList(new ArrayList<>(timetables));
+        }
+
+        if (luckyNumbers == null) {
+            this.luckyNumbers = Collections.emptyList();
+        } else {
+            this.luckyNumbers = Collections.unmodifiableList(new ArrayList<>(luckyNumbers));
+        }
+
+        if (replacements == null) {
+            this.replacements = Collections.emptyList();
+        } else {
+            this.replacements = Collections.unmodifiableList(new ArrayList<>(replacements));
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        News news = (News) o;
+
+        if (timestamp != news.timestamp) return false;
+        if (bells != null ? !bells.equals(news.bells) : news.bells != null) return false;
+        if (!timetables.equals(news.timetables)) return false;
+        if (!luckyNumbers.equals(news.luckyNumbers)) return false;
+        if (!replacements.equals(news.replacements)) return false;
+        return !(version != null ? !version.equals(news.version) : news.version != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = bells != null ? bells.hashCode() : 0;
+        result = 31 * result + timetables.hashCode();
+        result = 31 * result + luckyNumbers.hashCode();
+        result = 31 * result + replacements.hashCode();
+        result = 31 * result + (version != null ? version.hashCode() : 0);
+        result = 31 * result + timestamp;
+        return result;
+    }
 }

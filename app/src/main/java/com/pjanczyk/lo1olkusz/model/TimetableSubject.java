@@ -55,6 +55,28 @@ public final class TimetableSubject implements Parcelable {
         return group;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimetableSubject that = (TimetableSubject) o;
+
+        if (!name.equals(that.name)) return false;
+        if (classroom != null ? !classroom.equals(that.classroom) : that.classroom != null)
+            return false;
+        return !(group != null ? !group.equals(that.group) : that.group != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (classroom != null ? classroom.hashCode() : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        return result;
+    }
+
     //parcelable part
 
     public TimetableSubject(Parcel in) {

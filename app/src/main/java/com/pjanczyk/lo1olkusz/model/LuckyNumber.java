@@ -48,6 +48,23 @@ public final class LuckyNumber implements Parcelable, Emptyable {
         return date;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LuckyNumber that = (LuckyNumber) o;
+
+        return value == that.value && date.equals(that.date);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = value;
+        result = 31 * result + date.hashCode();
+        return result;
+    }
+
     //parcelable part
 
     public LuckyNumber(Parcel in) {

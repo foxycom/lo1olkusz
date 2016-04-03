@@ -24,27 +24,19 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public final class TimetableDay implements Parcelable {
-    private final TreeMap<Integer, TimetableSubject[]> subjects;
+    private final TreeMap<Integer, List<TimetableSubject>> subjects;
 
-    public TimetableDay(@NonNull Map<Integer, TimetableSubject[]> subjects) {
-        this.subjects = new TreeMap<>(subjects);
+    public TimetableDay(@Nullable Map<Integer, List<TimetableSubject>> subjects) {
+        this.subjects = new TreeMap<>(subjects); // defensive copy
     }
 
-    public Map<Integer, TimetableSubject[]> getSubjects() {
+    public Map<Integer, List<TimetableSubject>> getHours() {
         return Collections.unmodifiableMap(subjects);
     }
 
@@ -60,9 +52,29 @@ public final class TimetableDay implements Parcelable {
         return subjects.lastKey();
     }
 
-    @Nullable
-    public TimetableSubject[] atHour(int hour) {
-        return subjects.get(hour);
+    @NonNull
+    public List<TimetableSubject> atHour(int hour) {
+        List<TimetableSubject> list = subjects.get(hour);
+        if (list != null) {
+            return Collections.unmodifiableList(list);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimetableDay that = (TimetableDay) o;
+
+        return subjects.equals(that.subjects);
+    }
+
+    @Override
+    public int hashCode() {
+        return subjects.hashCode();
     }
 
     //parcelable part
@@ -72,7 +84,7 @@ public final class TimetableDay implements Parcelable {
         int size = in.readInt();
         for (int i = 0; i < size; i++) {
             int key = in.readInt();
-            TimetableSubject[] value = in.createTypedArray(TimetableSubject.CREATOR);
+            List<TimetableSubject> value = in.createTypedArrayList(TimetableSubject.CREATOR);
             subjects.put(key, value);
         }
     }
@@ -85,9 +97,9 @@ public final class TimetableDay implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(subjects.size());
-        for (Map.Entry<Integer, TimetableSubject[]> entry : subjects.entrySet()) {
+        for (Map.Entry<Integer, List<TimetableSubject>> entry : subjects.entrySet()) {
             dest.writeInt(entry.getKey());
-            dest.writeParcelableArray(entry.getValue(), 0);
+            dest.writeTypedList(entry.getValue());
         }
     }
 
@@ -102,25 +114,4 @@ public final class TimetableDay implements Parcelable {
             return new TimetableDay[size];
         }
     };
-
-
-    //json serialization
-
-    public static class Deserializer implements JsonDeserializer<TimetableDay> {
-        @Override
-        public TimetableDay deserialize(JsonElement json, Type typeOfT,
-                                        JsonDeserializationContext context) throws JsonParseException {
-            Type type = new TypeToken<TreeMap<Integer, TimetableSubject[]>>(){}.getType();
-            TreeMap<Integer, TimetableSubject[]> subjects = context.deserialize(json, type);
-            return new TimetableDay(subjects);
-        }
-    }
-
-    public static class Serializer implements JsonSerializer<TimetableDay> {
-        @Override
-        public JsonElement serialize(TimetableDay src, Type typeOfSrc, JsonSerializationContext context) {
-            Type type = new TypeToken<TreeMap<Integer, TimetableSubject>>(){}.getType();
-            return context.serialize(src.subjects, type);
-        }
-    }
 }

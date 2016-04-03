@@ -19,38 +19,45 @@
 
 package com.pjanczyk.lo1olkusz.model;
 
+import com.pjanczyk.testutils.ParcelableUtils;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import static com.pjanczyk.testutils.CollectionsUtils.entry;
+import static com.pjanczyk.testutils.CollectionsUtils.list;
+import static com.pjanczyk.testutils.CollectionsUtils.map;
 import static org.junit.Assert.*;
 
 public class TimetableDayTest {
 
+    static final TimetableSubject SUBJECT_1 = new TimetableSubject("S1", null, null);
+    static final TimetableSubject SUBJECT_2 = new TimetableSubject("S2", null, null);
+
+    static final List<TimetableSubject> HOUR_1 = list(SUBJECT_1);
+    static final List<TimetableSubject> HOUR_2 = list(SUBJECT_2);
+
+    static final Map<Integer, List<TimetableSubject>> HOURS = map(
+            entry(3, HOUR_1),
+            entry(7, HOUR_2)
+    );
+
     TimetableDay emptyDay;
     TimetableDay day;
-    Map<Integer, TimetableSubject[]> subjects;
-    TimetableSubject[] hour1;
-    TimetableSubject[] hour2;
 
     @Before
     public void setUp() throws Exception {
-        emptyDay = new TimetableDay(Collections.<Integer, TimetableSubject[]>emptyMap());
-
-        hour1 = new TimetableSubject[0];
-        hour2 = new TimetableSubject[0];
-        subjects = new HashMap<>();
-        subjects.put(3, hour1);
-        subjects.put(7, hour2);
-        day = new TimetableDay(subjects);
+        emptyDay = new TimetableDay(Collections.<Integer, List<TimetableSubject>>emptyMap());
+        day = new TimetableDay(HOURS);
     }
 
     @Test
-    public void testGetSubjects() throws Exception {
-        assertEquals(subjects, day.getSubjects());
+    public void testGetHours() throws Exception {
+        assertEquals(HOURS, day.getHours());
     }
 
     @Test
@@ -71,8 +78,14 @@ public class TimetableDayTest {
 
     @Test
     public void testAtHour() throws Exception {
-        assertArrayEquals(hour1, day.atHour(3));
-        assertArrayEquals(hour2, day.atHour(7));
-        assertArrayEquals(null, day.atHour(-1));
+        assertEquals(HOUR_1, day.atHour(3));
+        assertEquals(HOUR_2, day.atHour(7));
+        assertEquals(list(), day.atHour(-1));
+    }
+
+    @Test
+    public void testParcelable() {
+        ParcelableUtils.testParcelable(day);
+        ParcelableUtils.testParcelable(emptyDay);
     }
 }

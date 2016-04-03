@@ -26,14 +26,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class HttpUtils {
+public class HttpHelper {
 
     /**
      * Makes http get request and returns response as a string
      * @throws IOException             if an I/O error occurs
      * @throws HttpStatusCodeException if server returns http error status code
      */
-    public static String getString(String url) throws IOException, HttpStatusCodeException {
+    public String getString(String url) throws IOException, HttpStatusCodeException {
         URL url2 = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) url2.openConnection();
         connection.setConnectTimeout(5000);
@@ -50,7 +50,7 @@ public class HttpUtils {
         return response;
     }
 
-    private static String inputStreamToString(InputStream inputStream) throws IOException {
+    private String inputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = null;
 
         try {

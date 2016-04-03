@@ -19,68 +19,62 @@
 
 package com.pjanczyk.lo1olkusz.model;
 
-import org.joda.time.LocalDate;
+import com.pjanczyk.testutils.ParcelableUtils;
+
+import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static org.junit.Assert.*;
 
-public class ReplacementsTest {
+public class BellsTest {
 
-    static final String CLASS_NAME = "CLASS";
-    static final LocalDate DATE = LocalDate.parse("2016-01-01");
+    static final LocalTime t1 = new LocalTime("1:00");
+    static final LocalTime t2 = new LocalTime("2:00");
+    static final LocalTime t3 = new LocalTime("3:00");
+    static final LocalTime t4 = new LocalTime("4:00");
 
-    Replacements repls;
-    Map<Integer, String> entries;
-
-    Replacements empty;
+    Bells bells;
+    Bells empty;
 
     @Before
     public void setUp() throws Exception {
-        entries = new TreeMap<>();
-        entries.put(3, "r3");
-        entries.put(5, "r5");
-        repls = new Replacements(CLASS_NAME, DATE, entries);
-
-        empty = new Replacements(CLASS_NAME, DATE,
-                Collections.<Integer, String>emptyMap());
+        bells = new Bells(Arrays.asList(new Bells.Hour(t1, t2), new Bells.Hour(t3, t4)));
+        empty = new Bells(Collections.<Bells.Hour>emptyList());
     }
 
     @Test
     public void testIsEmpty() throws Exception {
-        assertEquals(false, repls.isEmpty());
         assertEquals(true, empty.isEmpty());
-    }
-
-    @Test
-    public void testGetDate() throws Exception {
-        assertEquals(DATE, repls.getDate());
-    }
-
-    @Test
-    public void testGetClassName() throws Exception {
-        assertEquals(CLASS_NAME, repls.getClassName());
+        assertEquals(false, bells.isEmpty());
     }
 
     @Test
     public void testSize() throws Exception {
-        assertEquals(2, repls.size());
         assertEquals(0, empty.size());
+        assertEquals(2, bells.size());
     }
 
     @Test
-    public void testAtHour() throws Exception {
-        assertEquals("r3", repls.atHour(3));
-        assertEquals(null, repls.atHour(4));
-        assertEquals("r5", repls.atHour(5));
+    public void testGet() throws Exception {
+        Bells.Hour h1 = bells.get(1);
+        Bells.Hour h2 = bells.get(2);
+        Bells.Hour h3 = bells.get(3);
+
+        assertEquals(t1, h1.getBegin());
+        assertEquals(t2, h1.getEnd());
+        assertEquals(t3, h2.getBegin());
+        assertEquals(t4, h2.getEnd());
+        assertNull(h3.getBegin());
+        assertNull(h3.getEnd());
     }
 
     @Test
-    public void testEntrySet() throws Exception {
-        assertEquals(entries.entrySet(), repls.entrySet());
+    public void testParcelable() throws Exception {
+        ParcelableUtils.testParcelable(bells);
+        ParcelableUtils.testParcelable(empty);
     }
 }
