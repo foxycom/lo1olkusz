@@ -24,12 +24,9 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
+import static com.pjanczyk.testutils.CollectionsUtils.*;
 import static org.junit.Assert.assertEquals;
 
 public class HourDataFactoryTest {
@@ -45,36 +42,38 @@ public class HourDataFactoryTest {
     static final TimetableSubject SUBJECT_NO_GROUP = new TimetableSubject("S3", null, null);
 
     HourData.Factory factory;
-    HourData.Factory empty;
+    HourData.Factory emptyFactory;
 
     @Before
     public void setUp() throws Exception {
         //bells
-        Bells bells = new Bells(Arrays.asList(null, HOUR_2_BELLS));
+        Bells bells = new Bells(list(null, HOUR_2_BELLS));
 
         //timetable
-        Map<Integer, TimetableSubject[]> subjects = new TreeMap<>();
-        subjects.put(2, new TimetableSubject[]{SUBJECT_USER_GROUP, SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP});
-        subjects.put(3, new TimetableSubject[]{SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP});
-        TimetableDay timetableDay = new TimetableDay(subjects);
+        TimetableDay timetableDay = new TimetableDay(map(
+                entry(2, list(SUBJECT_USER_GROUP, SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP)),
+                entry(3, list(SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP))
+        ));
 
         //groups
-        Set<String> groups = new TreeSet<>(Arrays.asList(USER_GROUP));
+        Set<String> groups = set(USER_GROUP);
 
         //replacements
-        Map<Integer, String> replacementsMap = new TreeMap<>();
-        replacementsMap.put(2, HOUR_2_REPLACEMENT);
-        Replacements replacements =
-                new Replacements("CLASS", new LocalDate(2016, 1, 1), replacementsMap);
+        Replacements replacements = new Replacements(
+                "CLASS",
+                new LocalDate(2016, 1, 1),
+                map(
+                        entry(2, HOUR_2_REPLACEMENT)
+                ));
 
         factory = new HourData.Factory(timetableDay, bells, groups, replacements);
 
-        empty = new HourData.Factory(null, null, null, null);
+        emptyFactory = new HourData.Factory(null, null, null, null);
     }
 
     @Test
     public void testSize() throws Exception {
-        assertEquals(0, empty.size());
+        assertEquals(0, emptyFactory.size());
         assertEquals(2, factory.size());
     }
 
@@ -85,11 +84,11 @@ public class HourDataFactoryTest {
         assertEquals(HOUR_2_BELLS.getBegin(), hour2.getBeginTime());
         assertEquals(HOUR_2_BELLS.getEnd(), hour2.getEndTime());
         assertEquals(HOUR_2_REPLACEMENT, hour2.getReplacement());
-        assertEquals(Arrays.asList(SUBJECT_USER_GROUP), hour2.getPrimarySubjects());
-        assertEquals(Arrays.asList(SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP), hour2.getSecondarySubjects());
+        assertEquals(list(SUBJECT_USER_GROUP), hour2.getPrimarySubjects());
+        assertEquals(list(SUBJECT_OTHER_GROUP, SUBJECT_NO_GROUP), hour2.getSecondarySubjects());
 
         HourData hour3 = factory.get(1); //3rd hour
-        assertEquals(Arrays.asList(SUBJECT_NO_GROUP), hour3.getPrimarySubjects());
-        assertEquals(Arrays.asList(SUBJECT_OTHER_GROUP), hour3.getSecondarySubjects());
+        assertEquals(list(SUBJECT_NO_GROUP), hour3.getPrimarySubjects());
+        assertEquals(list(SUBJECT_OTHER_GROUP), hour3.getSecondarySubjects());
     }
 }

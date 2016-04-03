@@ -26,27 +26,26 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
-import java.util.TreeMap;
 
-import static org.junit.Assert.*;
+import static com.pjanczyk.testutils.CollectionsUtils.*;
+import static org.junit.Assert.assertEquals;
 
 public class ReplacementsTest {
 
     static final String CLASS_NAME = "CLASS";
     static final LocalDate DATE = LocalDate.parse("2016-01-01");
 
-    Replacements repls;
-    Map<Integer, String> entries;
+    static final Map<Integer, String> ENTRIES = map(
+            entry(3, "r3"),
+            entry(5, "r5")
+    );
 
+    Replacements repls;
     Replacements empty;
 
     @Before
     public void setUp() throws Exception {
-        entries = new TreeMap<>();
-        entries.put(3, "r3");
-        entries.put(5, "r5");
-        repls = new Replacements(CLASS_NAME, DATE, entries);
-
+        repls = new Replacements(CLASS_NAME, DATE, ENTRIES);
         empty = new Replacements(CLASS_NAME, DATE, null);
     }
 
@@ -81,7 +80,7 @@ public class ReplacementsTest {
 
     @Test
     public void testEntrySet() throws Exception {
-        assertEquals(entries.entrySet(), repls.entrySet());
+        assertEquals(ENTRIES.entrySet(), repls.entrySet());
     }
 
     @Test
