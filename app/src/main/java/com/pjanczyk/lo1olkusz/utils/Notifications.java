@@ -142,11 +142,16 @@ public class Notifications {
     }
 
     private static int replacementsId(Replacements r) {
-        return 23 * r.getClassName().hashCode() + r.getDate().hashCode();
+        int result = r.getClassName().hashCode();
+        result = 31 * result + r.getDate().hashCode();
+        result = 2 * result;
+        return result;
     }
 
     private static int luckyNumberId(LuckyNumber n) {
-        return n.getDate().hashCode();
+        int result = n.getDate().hashCode();
+        result = 2 * result + 1;
+        return result;
     }
 
     private static void cancelNotification(Context context, int id) {
