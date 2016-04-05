@@ -22,6 +22,7 @@ package com.pjanczyk.lo1olkusz.synchronization;
 import android.content.Context;
 import android.util.Log;
 
+import com.pjanczyk.lo1olkusz.BuildConfig;
 import com.pjanczyk.lo1olkusz.R;
 import com.pjanczyk.lo1olkusz.model.LuckyNumber;
 import com.pjanczyk.lo1olkusz.model.News;
@@ -88,6 +89,10 @@ public class Synchronizer {
 
         int timestamp = settings.getApiTimestamp();
         int version = AppVersion.getVersionCode(context);
+        if (BuildConfig.DEBUG) {
+            version += 100000;
+        }
+
         String androidId = android.provider.Settings.Secure.getString(
                 context.getContentResolver(),
                 android.provider.Settings.Secure.ANDROID_ID);
