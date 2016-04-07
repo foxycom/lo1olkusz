@@ -33,10 +33,10 @@ import android.widget.TextView;
 
 import com.pjanczyk.lo1olkusz.R;
 import com.pjanczyk.lo1olkusz.model.Bells;
-import com.pjanczyk.lo1olkusz.storage.SavedBells;
-import com.pjanczyk.lo1olkusz.storage.SavedTimetables;
 import com.pjanczyk.lo1olkusz.model.Timetable;
 import com.pjanczyk.lo1olkusz.model.TimetableDay;
+import com.pjanczyk.lo1olkusz.storage.SavedBells;
+import com.pjanczyk.lo1olkusz.storage.SavedTimetables;
 import com.pjanczyk.lo1olkusz.utils.TimeFormatter;
 
 import org.joda.time.LocalDate;
@@ -150,7 +150,6 @@ public class DailyScheduleFragment extends FragmentBase {
             if (tabs != null) { //ViewPager & tabs layout
                 int currentItem = viewPager.getCurrentItem();
                 pagerAdapter.notifyDataSetChanged();
-                tabs.setTabsFromPagerAdapter(pagerAdapter);
 
                 if (pagerGoTo != -1) {
                     viewPager.setCurrentItem(pagerGoTo, false);
