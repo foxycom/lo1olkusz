@@ -144,6 +144,12 @@ public class DailyScheduleFragment extends FragmentBase {
 
         if (timetable == null) {
             timetableLoadingErrorText.setVisibility(View.VISIBLE);
+
+            if (tabs != null) { //ViewPager & tabs layout
+                // After setting timetable to null, PagerAdapter#getCount returns 0,
+                // so it's necessary to call PagerAdapter#notifyDataSetChanged.
+                pagerAdapter.notifyDataSetChanged();
+            }
         } else {
             timetableLoadingErrorText.setVisibility(View.GONE);
 
