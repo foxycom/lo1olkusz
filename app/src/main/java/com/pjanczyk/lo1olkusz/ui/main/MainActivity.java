@@ -23,7 +23,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -47,9 +46,7 @@ import com.pjanczyk.lo1olkusz.synchronization.SyncService;
 import com.pjanczyk.lo1olkusz.synchronization.SyncTimingHelper;
 import com.pjanczyk.lo1olkusz.ui.firstrun.FirstRunActivity;
 import com.pjanczyk.lo1olkusz.ui.settings.SettingsActivity;
-import com.pjanczyk.lo1olkusz.utils.AppVersion;
 import com.pjanczyk.lo1olkusz.utils.Settings;
-import com.pjanczyk.lo1olkusz.utils.Urls;
 import com.pjanczyk.lo1olkusz.utils.network.NetworkAvailability;
 
 import org.joda.time.LocalDate;
@@ -153,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
         tabs.addTab(tabs.newTab().setIcon(R.drawable.ic_notifications));
         tabs.addTab(tabs.newTab().setIcon(R.drawable.ic_timetable));
 
-        tabs.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int id = tab.getPosition();

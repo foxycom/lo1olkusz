@@ -32,14 +32,4 @@ public class NetworkAvailability {
 
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
-    public static boolean isWifiAvailable(Context context) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        @SuppressWarnings("deprecation")
-        NetworkInfo networkInfo  = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        return networkInfo != null && networkInfo.isConnectedOrConnecting();
-    }
 }

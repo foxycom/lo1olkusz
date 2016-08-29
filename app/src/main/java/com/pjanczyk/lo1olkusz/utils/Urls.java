@@ -21,6 +21,5 @@ package com.pjanczyk.lo1olkusz.utils;
 
 public class Urls {
 
-    public static final String DOWNLOAD = "http://lo1olkusz.tk/download";
     public static final String API = "http://lo1olkusz.tk/api/news/%d?aid=%s&v=%d";
 }

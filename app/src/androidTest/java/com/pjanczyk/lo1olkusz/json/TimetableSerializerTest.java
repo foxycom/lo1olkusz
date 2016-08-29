@@ -19,8 +19,8 @@
 
 package com.pjanczyk.lo1olkusz.json;
 
+import android.support.test.filters.SmallTest;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import com.pjanczyk.lo1olkusz.model.Timetable;
 import com.pjanczyk.lo1olkusz.model.TimetableDay;
