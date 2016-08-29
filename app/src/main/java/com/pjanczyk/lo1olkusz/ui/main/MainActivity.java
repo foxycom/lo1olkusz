@@ -216,7 +216,6 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
             } else {
                 switchFragment(0, null);
             }
-            showDialogIfNewApkAvailable();
         }
     }
 
@@ -410,23 +409,5 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
         currentFragment = fragment;
 
         tabs.getTabAt(id).select();
-    }
-
-    private void showDialogIfNewApkAvailable() {
-        boolean upToDate = AppVersion.isUpToDate(this);
-
-        if (!upToDate && NetworkAvailability.isWifiAvailable(this)) {
-            Snackbar.make(findViewById(android.R.id.content),
-                    R.string.new_app_version_available,
-                    Snackbar.LENGTH_LONG)
-                    .setAction("Pobierz", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Urls.DOWNLOAD));
-                            startActivity(intent);
-                        }
-                    })
-                    .show();
-        }
     }
 }

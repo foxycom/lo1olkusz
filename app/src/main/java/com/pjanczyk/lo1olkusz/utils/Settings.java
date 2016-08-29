@@ -157,16 +157,6 @@ public class Settings {
     public void setLastCleanUp(LocalDate date) {
         editor.putString("lastCleanUp", date.toString());
     }
-
-    @Nullable
-    public Integer getRemoteVersion() {
-        long value = preferences.getInt("remoteVersion", -1);
-        return value == -1 ? null : (int) value;
-    }
-    public Settings setRemoteVersion(@Nullable Integer value) {
-        editor.putInt("remoteVersion", value == null ? -1 : value);
-        return this;
-    }
     //endregion
 
 

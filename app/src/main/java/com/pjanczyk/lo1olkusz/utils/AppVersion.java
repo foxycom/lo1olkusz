@@ -41,13 +41,4 @@ public class AppVersion {
             return null;
         }
     }
-
-    public static boolean isUpToDate(Context context) {
-        Settings settings = new Settings(context);
-
-        int currentVersion = AppVersion.getVersionCode(context);
-        Integer remoteVersion = settings.getRemoteVersion();
-
-        return remoteVersion == null || remoteVersion <= currentVersion;
-    }
 }

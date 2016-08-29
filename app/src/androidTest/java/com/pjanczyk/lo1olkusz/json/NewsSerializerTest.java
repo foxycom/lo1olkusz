@@ -103,7 +103,6 @@ public class NewsSerializerTest {
     public void testSerialize() throws Exception {
 
         int timestamp = 123;
-        Integer version = 66;
 
         Bells bells = new Bells(list(
                 new Bells.Hour(new LocalTime("8:00"), new LocalTime("9:00"))
@@ -129,7 +128,6 @@ public class NewsSerializerTest {
 
         News expected = new News(
                 timestamp,
-                version,
                 bells,
                 timetables,
                 luckyNumbers,
@@ -146,7 +144,6 @@ public class NewsSerializerTest {
     public void testSerializeEmpty() throws Exception {
         News expected = new News(
                 123,
-                null,
                 null,
                 emptyList(Timetable.class),
                 emptyList(LuckyNumber.class),

@@ -139,11 +139,6 @@ public class Synchronizer {
             savedLuckyNumbers.save(ln);
         }
 
-        /* Save info about a new version of app in the settings.
-           It is checked in MainActivity#onStart.
-           User will see alert after restarting app. */
-        settings.setRemoteVersion(news.version);
-
         settings.setLastSyncTime(System.currentTimeMillis());
         settings.setApiTimestamp(news.timestamp);
 

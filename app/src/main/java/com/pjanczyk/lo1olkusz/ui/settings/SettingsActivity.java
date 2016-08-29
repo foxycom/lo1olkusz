@@ -21,7 +21,6 @@ package com.pjanczyk.lo1olkusz.ui.settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -33,7 +32,6 @@ import com.pjanczyk.lo1olkusz.model.Timetable;
 import com.pjanczyk.lo1olkusz.storage.SavedTimetables;
 import com.pjanczyk.lo1olkusz.utils.AppVersion;
 import com.pjanczyk.lo1olkusz.utils.Settings;
-import com.pjanczyk.lo1olkusz.utils.Urls;
 import com.pjanczyk.lo1olkusz.utils.settings.AppCompatPreferenceActivity;
 import com.pjanczyk.lo1olkusz.utils.settings.MultiSelectListPreference;
 
@@ -69,19 +67,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity
 
         Preference prefVersion = findPreference("version");
         String version = AppVersion.getVersionName(this);
-        if (AppVersion.isUpToDate(this)) {
-            prefVersion.setSummary(getString(R.string.version_up_to_date, version));
-        } else {
-            prefVersion.setSummary(getString(R.string.version_out_of_date, version));
-            prefVersion.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(Urls.DOWNLOAD));
-                    startActivity(intent);
-                    return true;
-                }
-            });
-        }
+        prefVersion.setSummary(version);
 
         prefUserNumber = (EditTextPreference) findPreference(getString(R.string.user_number_key));
         prefUserClass = (ListPreference) findPreference(getString(R.string.user_class_key));

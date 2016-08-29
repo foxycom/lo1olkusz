@@ -35,7 +35,7 @@ public class ApiTest {
 
     @Test
     public void testGetNews() throws Exception {
-        News expected = new News(123456, null, null, null, null, null);
+        News expected = new News(123456, null, null, null, null);
 
         HttpHelper httpHelper = mock(HttpHelper.class);
 

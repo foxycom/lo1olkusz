@@ -42,7 +42,6 @@ public class NewsSerializer extends Serializer<News> {
     @Override
     public News read(JsonReader reader) throws IOException, JsonParseException {
         int timestamp = -1;
-        Integer version = null;
         Bells bells = null;
         List<Timetable> timetables = null;
         List<LuckyNumber> luckyNumbers = null;
@@ -59,9 +58,6 @@ public class NewsSerializer extends Serializer<News> {
                     switch (prop) {
                         case "timestamp":
                             timestamp = reader.nextInt();
-                            break;
-                        case "version":
-                            version = reader.nextInt();
                             break;
                         case "bells":
                             bells = bellsSerializer.read(reader);
@@ -90,7 +86,6 @@ public class NewsSerializer extends Serializer<News> {
 
         return new News(
                 timestamp,
-                version,
                 bells,
                 timetables,
                 luckyNumbers,

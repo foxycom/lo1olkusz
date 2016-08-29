@@ -43,8 +43,6 @@
     <string name="sync_error">Błąd synchronizacji</string>
     <string name="sync_error_bad_response">Błąd synchronizacji - błędna odpowiedź serwera</string>
 
-    <string name="new_app_version_available">Dostępna nowa wersja aplikacji</string>
-
     <string name="settings_user_number">Numer w dzienniku</string>
     <string name="settings_user_class">Klasa</string>
     <string name="settings_user_groups">Grupy</string>
@@ -64,9 +62,6 @@
     <string name="notification_replacements_text">klasa %1$s - %2$s</string>
 
     <string name="timetable_loading_error">Błąd wczytywania planu lekcji</string>
-
-    <string name="version_up_to_date">%s (aktualna)</string>
-    <string name="version_out_of_date">%s (dostępna aktualizacja)</string>
 
     <string name="notification_list_replacements">Zastęstwa (%d)</string>
     <string name="notification_list_lucky_number">Szczęśliwy numerek</string>

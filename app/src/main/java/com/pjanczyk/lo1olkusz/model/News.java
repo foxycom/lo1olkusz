@@ -28,22 +28,18 @@ import java.util.List;
 
 public class News {
     public final int timestamp;
-    @Nullable public final Integer version;
     @Nullable public final Bells bells;
     @NonNull public final List<Timetable> timetables;
     @NonNull public final List<LuckyNumber> luckyNumbers;
     @NonNull public final List<Replacements> replacements;
 
     public News(int timestamp,
-                @Nullable Integer version,
                 @Nullable Bells bells,
                 @Nullable List<Timetable> timetables,
                 @Nullable List<LuckyNumber> luckyNumbers,
                 @Nullable List<Replacements> replacements) {
 
         this.timestamp = timestamp;
-
-        this.version = version;
 
         this.bells = bells;
 
@@ -78,8 +74,7 @@ public class News {
         if (!timetables.equals(news.timetables)) return false;
         if (!luckyNumbers.equals(news.luckyNumbers)) return false;
         if (!replacements.equals(news.replacements)) return false;
-        return !(version != null ? !version.equals(news.version) : news.version != null);
-
+        return true;
     }
 
     @Override
@@ -88,7 +83,6 @@ public class News {
         result = 31 * result + timetables.hashCode();
         result = 31 * result + luckyNumbers.hashCode();
         result = 31 * result + replacements.hashCode();
-        result = 31 * result + (version != null ? version.hashCode() : 0);
         result = 31 * result + timestamp;
         return result;
     }
