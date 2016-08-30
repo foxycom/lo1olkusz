@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.pjanczyk.lo1olkusz.R;
 import com.pjanczyk.lo1olkusz.model.LuckyNumber;
@@ -45,12 +46,17 @@ import java.util.Map;
 public class NotificationsFragment extends FragmentBase {
 
     private NotificationsAdapter adapter;
+    private RecyclerView recyclerView;
+    private TextView textEmpty;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(R.layout.notifications, container, false);
+
+        View root = inflater.inflate(R.layout.notifications, container, false);
+        recyclerView = (RecyclerView) root.findViewById(R.id.recycler_view);
+        textEmpty = (TextView) root.findViewById(R.id.text_empty);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -66,7 +72,7 @@ public class NotificationsFragment extends FragmentBase {
 
         updateContent();
 
-        return recyclerView;
+        return root;
     }
 
     @Override
@@ -113,6 +119,10 @@ public class NotificationsFragment extends FragmentBase {
         });
         adapter.dataset = dataset;
         adapter.notifyDataSetChanged();
+
+        boolean empty = dataset.isEmpty();
+        recyclerView.setVisibility(empty ? View.GONE : View.VISIBLE);
+        textEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
 

@@ -17,12 +17,25 @@
   ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.v7.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/cards_background"
+    android:orientation="vertical"
     tools:context="com.pjanczyk.lo1olkusz.ui.main.NotificationsFragment">
 
-</android.support.v7.widget.RecyclerView>
+    <TextView
+        android:id="@+id/text_empty"
+        style="@style/FullScreenErrorMsg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/notifications_no_items"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
+
