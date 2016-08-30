@@ -26,33 +26,40 @@ import android.support.annotation.Nullable;
 
 import org.joda.time.LocalTime;
 
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public final class Bells implements Parcelable, Emptyable {
 
-    private final Hour[] hours;
+    private final Map<Integer, Hour> hours;
 
-    public Bells(@NonNull Collection<Hour> hours) {
-        this.hours = hours.toArray(new Hour[hours.size()]); // defensive copy
+    public Bells(@NonNull Map<Integer, Hour> hours) {
+        this.hours = new TreeMap<>(hours);
     }
 
     public boolean isEmpty() {
-        return hours.length == 0;
+        return hours.isEmpty();
     }
 
     public int size() {
-        return hours.length;
+        return hours.size();
     }
 
     @NonNull
     public Hour get(int hour) {
-        int idx = hour - 1;
-        if (idx >= 0 && idx < hours.length) {
-            return hours[idx];
+        Hour temp = hours.get(hour);
+        if (temp != null) {
+            return temp;
         } else {
             return Hour.EMPTY;
         }
+    }
+
+    @NonNull
+    public Set<Map.Entry<Integer, Hour>> getEntries() {
+        return Collections.unmodifiableSet(hours.entrySet());
     }
 
     @Override
@@ -62,12 +69,13 @@ public final class Bells implements Parcelable, Emptyable {
 
         Bells bells = (Bells) o;
 
-        return Arrays.equals(hours, bells.hours);
+        return hours.equals(bells.hours);
+
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(hours);
+        return hours.hashCode();
     }
 
     public final static class Hour {
@@ -99,7 +107,7 @@ public final class Bells implements Parcelable, Emptyable {
             Hour hour = (Hour) o;
 
             if (begin != null ? !begin.equals(hour.begin) : hour.begin != null) return false;
-            return !(end != null ? !end.equals(hour.end) : hour.end != null);
+            return end != null ? end.equals(hour.end) : hour.end == null;
 
         }
 
@@ -114,13 +122,18 @@ public final class Bells implements Parcelable, Emptyable {
     //parcelable part
 
     public Bells(Parcel in) {
-        hours = new Hour[in.readInt()];
-        for (int i = 0; i < hours.length; i++) {
+        hours = new TreeMap<>();
+        int count = in.readInt();
+
+        for (int i = 0; i < count; i++) {
+            int id = in.readInt();
             int begin = in.readInt();
             int end = in.readInt();
-            hours[i] = new Hour(
+            Hour hour = new Hour(
                     begin == 0 ? null : LocalTime.fromMillisOfDay(begin),
                     end == 0 ? null : LocalTime.fromMillisOfDay(end));
+
+            hours.put(id, hour);
         }
     }
 
@@ -131,8 +144,12 @@ public final class Bells implements Parcelable, Emptyable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(hours.length);
-        for (Hour hour : hours) {
+        dest.writeInt(hours.size());
+        for (Map.Entry<Integer, Hour> entry : hours.entrySet()) {
+            int id = entry.getKey();
+            Hour hour = entry.getValue();
+
+            dest.writeInt(id);
             dest.writeInt(hour.begin == null ? 0 : hour.begin.getMillisOfDay());
             dest.writeInt(hour.end == null ? 0 : hour.end.getMillisOfDay());
         }

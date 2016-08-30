@@ -47,7 +47,7 @@ public class HourDataFactoryTest {
     @Before
     public void setUp() throws Exception {
         //bells
-        Bells bells = new Bells(list(null, HOUR_2_BELLS));
+        Bells bells = new Bells(map(entry(2, HOUR_2_BELLS)));
 
         //timetable
         TimetableDay timetableDay = new TimetableDay(map(

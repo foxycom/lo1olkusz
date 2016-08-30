@@ -28,14 +28,14 @@ import com.pjanczyk.lo1olkusz.model.Bells;
 import org.joda.time.LocalTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BellsSerializer extends Serializer<Bells> {
 
     @Override
     public Bells read(JsonReader reader) throws IOException, JsonParseException {
-        List<Bells.Hour> bells = new ArrayList<>();
+        Map<Integer, Bells.Hour> bells = new HashMap<>();
 
         try {
             reader.beginObject();
@@ -43,12 +43,12 @@ public class BellsSerializer extends Serializer<Bells> {
                 String prop = reader.nextName();
                 if (prop.equals("value") && reader.peek() != JsonToken.NULL) {
                     reader.beginArray();
-                    while (reader.hasNext()) {
+                    for (int id = 1; reader.hasNext(); id++) {
                         reader.beginArray();
                         LocalTime begin = LocalTimeSerializer.INSTANCE.read(reader);
                         LocalTime end = LocalTimeSerializer.INSTANCE.read(reader);
                         reader.endArray();
-                        bells.add(new Bells.Hour(begin, end));
+                        bells.put(id, new Bells.Hour(begin, end));
                     }
                     reader.endArray();
                 } else {

@@ -25,9 +25,9 @@ import org.joda.time.LocalTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 
+import static com.pjanczyk.testutils.CollectionsUtils.*;
 import static org.junit.Assert.*;
 
 public class BellsTest {
@@ -42,8 +42,11 @@ public class BellsTest {
 
     @Before
     public void setUp() throws Exception {
-        bells = new Bells(Arrays.asList(new Bells.Hour(t1, t2), new Bells.Hour(t3, t4)));
-        empty = new Bells(Collections.<Bells.Hour>emptyList());
+        bells = new Bells(map(
+                entry(1, new Bells.Hour(t1, t2)),
+                entry(2, new Bells.Hour(t3, t4))
+        ));
+        empty = new Bells(Collections.<Integer, Bells.Hour>emptyMap());
     }
 
     @Test

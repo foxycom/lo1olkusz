@@ -29,8 +29,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static com.pjanczyk.testutils.CollectionsUtils.emptyList;
-import static com.pjanczyk.testutils.CollectionsUtils.list;
+import java.util.Collections;
+
+import static com.pjanczyk.testutils.CollectionsUtils.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)
@@ -38,12 +39,12 @@ import static org.junit.Assert.assertEquals;
 public class BellsSerializerTest {
 
     static final String JSON_1 = "{\"value\":[[\"8:00\",\"9:00\"]]}";
-    static final Bells OBJECT_1 = new Bells(list(
-            new Bells.Hour(new LocalTime("8:00"), new LocalTime("9:00"))
+    static final Bells OBJECT_1 = new Bells(map(
+            entry(1, new Bells.Hour(new LocalTime("8:00"), new LocalTime("9:00")))
     ));
 
     static final String JSON_2 = "{}";
-    static final Bells OBJECT_2 = new Bells(emptyList(Bells.Hour.class));
+    static final Bells OBJECT_2 = new Bells(Collections.<Integer, Bells.Hour>emptyMap());
 
     BellsSerializer serializer;
 

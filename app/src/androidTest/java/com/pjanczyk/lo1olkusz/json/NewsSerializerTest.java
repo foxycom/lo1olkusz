@@ -104,8 +104,8 @@ public class NewsSerializerTest {
 
         int timestamp = 123;
 
-        Bells bells = new Bells(list(
-                new Bells.Hour(new LocalTime("8:00"), new LocalTime("9:00"))
+        Bells bells = new Bells(map(
+                entry(1, new Bells.Hour(new LocalTime("8:00"), new LocalTime("9:00")))
         ));
 
         List<Timetable> timetables = list(
