@@ -148,13 +148,13 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
 
         tabs.addTab(tabs.newTab()
                 .setIcon(R.drawable.ic_daily)
-                .setContentDescription(R.string.TAB_DAILY));
+                .setContentDescription(R.string.tab_daily));
         tabs.addTab(tabs.newTab()
                 .setIcon(R.drawable.ic_timetable)
-                .setContentDescription(R.string.TAB_TIMETABLE));
+                .setContentDescription(R.string.tab_timetable));
         tabs.addTab(tabs.newTab()
                 .setIcon(R.drawable.ic_notifications)
-                .setContentDescription(R.string.TAB_NOTIFICATIONS));
+                .setContentDescription(R.string.tab_notifications));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

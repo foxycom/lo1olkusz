@@ -28,6 +28,10 @@
 
     <string name="close">Zamknij</string>
 
+    <string name="tab_timetable">Plan lekcji</string>
+    <string name="tab_notifications">Powiadomienia</string>
+    <string name="tab_daily">Plan dnia</string>
+
     <string name="action_settings">Ustawienia</string>
     <string name="action_refresh">Odśwież</string>
     <string name="action_select_class">Wybierz klasę</string>
@@ -65,8 +69,6 @@
 
     <string name="notification_list_replacements">Zastęstwa (%d)</string>
     <string name="notification_list_lucky_number">Szczęśliwy numerek</string>
-    <string name="TAB_TIMETABLE">Plan lekcji</string>
-    <string name="TAB_NOTIFICATIONS">Powiadomienia</string>
-    <string name="TAB_DAILY">Plan dnia</string>
+    <string name="notifications_no_items">Brak powiadomień</string>
 
 </resources>
