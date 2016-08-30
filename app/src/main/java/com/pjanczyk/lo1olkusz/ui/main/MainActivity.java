@@ -146,9 +146,15 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
         tabs = (TabLayout) findViewById(R.id.tabs);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.ic_daily));
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.ic_notifications));
-        tabs.addTab(tabs.newTab().setIcon(R.drawable.ic_timetable));
+        tabs.addTab(tabs.newTab()
+                .setIcon(R.drawable.ic_daily)
+                .setContentDescription(R.string.TAB_DAILY));
+        tabs.addTab(tabs.newTab()
+                .setIcon(R.drawable.ic_timetable)
+                .setContentDescription(R.string.TAB_TIMETABLE));
+        tabs.addTab(tabs.newTab()
+                .setIcon(R.drawable.ic_notifications)
+                .setContentDescription(R.string.TAB_NOTIFICATIONS));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -388,12 +394,12 @@ public class MainActivity extends AppCompatActivity implements SyncService.SyncL
                 fragment = DailyScheduleFragment.newInstance(argDate);
                 break;
             case 1:
-                menuItemClassMode.setVisible(false);
-                fragment = new NotificationsFragment();
-                break;
-            case 2:
                 menuItemClassMode.setVisible(true);
                 fragment = new TimetableFragment();
+                break;
+            case 2:
+                menuItemClassMode.setVisible(false);
+                fragment = new NotificationsFragment();
                 break;
         }
 

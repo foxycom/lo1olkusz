@@ -65,5 +65,8 @@
 
     <string name="notification_list_replacements">Zastęstwa (%d)</string>
     <string name="notification_list_lucky_number">Szczęśliwy numerek</string>
+    <string name="TAB_TIMETABLE">Plan lekcji</string>
+    <string name="TAB_NOTIFICATIONS">Powiadomienia</string>
+    <string name="TAB_DAILY">Plan dnia</string>
 
 </resources>
